@@ -13,6 +13,7 @@ const initialState = {
     token: null,
     error: false,
     user: null,
+    role:null,
     isLoggedIn: !!JSON.parse(localStorage.getItem('isLoggedIn')),
 };
 
@@ -26,6 +27,9 @@ const authSlice = createSlice({
         setToken: (state, action) => {
             state.token = action.payload;
         },
+        setRole: (state, action) => {
+            state.role = action.payload;
+        },
         setUser: (state, action) => {
             state.user = action.payload;
             state.token = get(action.payload, 'token', null);
@@ -37,11 +41,12 @@ const authSlice = createSlice({
             state.token = null;
             state.user = null;
             state.isLoggedIn = false;
+            state.role = null;
         });
     },
 });
 
 const { reducer, actions } = authSlice;
 
-export const { setToken, setUser, setLoggedIn } = actions;
+export const { setToken, setUser, setLoggedIn ,setRole} = actions;
 export default reducer;

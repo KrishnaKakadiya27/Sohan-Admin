@@ -1,20 +1,13 @@
-import { useEffect, useState } from 'react';
-import './App.css';
-import AppRoute from './routes';
+import { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import './App.css';
 import { setLoggedIn, setToken } from './redux/slices/authSlice';
 import Router from './routes';
-import { BrowserRouter } from 'react-router-dom';
 
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const token = localStorage.getItem("token");
-  console.log("token", token, isAuthenticated)
-
-
 
   const dispatch = useDispatch();
 
@@ -31,17 +24,6 @@ function App() {
   const { isLoggedIn } = useSelector((state) => state.auth);
 
   const isLoggedin = isLoggedIn || !!JSON.parse(localStorage.getItem('token'));
-
-
-  // useEffect(() => {
-  //   if (token) {
-  //     setIsAuthenticated(true)
-  //   } else {
-  //     setIsAuthenticated(false)
-  //   }
-  // }, [token])
-
-
 
   return (
     <div className="">

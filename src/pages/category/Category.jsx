@@ -26,7 +26,6 @@ const Category = () => {
   const categories = useSelector(selectCategories);
   const loading = useSelector(selectLoading);
   const noData = useSelector(selectNoData);
-  console.log("noData: ", noData);
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [checked, setChecked] = useState(true);
@@ -167,6 +166,7 @@ const Category = () => {
           onPageChange={handlePageChange}
         />
       )}
+      
     </div>
   );
 };

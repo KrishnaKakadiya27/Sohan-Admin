@@ -9,18 +9,34 @@ import { useLocation, useNavigate } from "react-router-dom"; // Import necessary
 import { ReactComponent as DropdownBottomIcon } from "../../../assets/icons/dropdownBottomIcon.svg";
 import { ReactComponent as DropdownRightIcon } from "../../../assets/icons/dropdownRightIcon.svg";
 import { ReactComponent as Category } from "../../../assets/icons/sidebarIcon/category.svg";
-import { ReactComponent as Chat } from "../../../assets/icons/sidebarIcon/chat.svg";
-import { ReactComponent as Content } from "../../../assets/icons/sidebarIcon/content.svg";
 import { ReactComponent as Dashboard } from "../../../assets/icons/sidebarIcon/dashboard.svg";
-import { ReactComponent as Sales } from "../../../assets/icons/sidebarIcon/sales.svg";
-import { ReactComponent as Setting } from "../../../assets/icons/sidebarIcon/setting.svg";
-import { ReactComponent as UserSetting } from "../../../assets/icons/sidebarIcon/userSetting.svg";
 import { ReactComponent as SidebarArrowIcon } from "../../../assets/icons/sidebarIcon/sidebarArrowIcon.svg";
 
 export default function SidebarList() {
   const [open, setOpen] = React.useState(null);
-  const navigate = useNavigate(); // Use navigate for programmatic navigation
-  const location = useLocation(); // Use location to get current pathname
+  const navigate = useNavigate();
+  const location = useLocation();
+  const role = localStorage.getItem("role");
+
+  const isActiveOperatorMaster = () => {
+    const basePaths = [
+      "/operator-master",
+      "/operator-master/add",
+    ];
+
+    // Check for exact base paths
+    if (basePaths.includes(location.pathname)) {
+      return true;
+    }
+
+    // Check for dynamic paths, including paths with or without an ID
+    const dynamicPaths = [
+      /^\/operator-master\/edit(\/[^/]+)?$/,
+      /^\/operator-master\/view(\/[^/]+)?$/
+    ];
+
+    return dynamicPaths.some((regex) => regex.test(location.pathname));
+  };
 
   const handleClick = (item) => {
     setOpen(open === item ? null : item); // Only expand/collapse, no navigation
@@ -76,7 +92,7 @@ export default function SidebarList() {
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
-          color: getTextColor("/operator-master"),
+          color: isActiveOperatorMaster() ? "#D8942E" : getTextColor("/operator-master"),
         }}
         onClick={() => handleNavigation("/operator-master")} // Navigate on click
       >
@@ -101,6 +117,38 @@ export default function SidebarList() {
         </ListItemIcon>
         <ListItemText primary="Item Master" />
       </ListItemButton>
+
+
+      {/* raw material Master */}
+      {role === "superadmin" && <ListItemButton
+        sx={{
+          py: "12px",
+          "&:hover": { color: "#D8942E" },
+          color: getTextColor("/raw_material_master"),
+        }}
+        onClick={() => handleNavigation("/raw_material_master")} // Navigate on click
+      >
+        <ListItemIcon sx={{ minWidth: "42px" }}>
+          <Dashboard width={"20"} color="grey" />
+        </ListItemIcon>
+        <ListItemText primary="Raw Material Master" />
+      </ListItemButton>}
+
+
+      {/* Materials Master */}
+      {role === "superadmin" && <ListItemButton
+        sx={{
+          py: "12px",
+          "&:hover": { color: "#D8942E" },
+          color: getTextColor("/materials_master"),
+        }}
+        onClick={() => handleNavigation("/materials_master")} // Navigate on click
+      >
+        <ListItemIcon sx={{ minWidth: "42px" }}>
+          <Dashboard width={"20"} color="grey" />
+        </ListItemIcon>
+        <ListItemText primary="Materials Master" />
+      </ListItemButton>}
 
 
       {/* Machine Master */}

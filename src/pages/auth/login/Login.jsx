@@ -4,7 +4,7 @@ import Logo from "../../../assets/images/logo.svg";
 import { ReactComponent as InfoLogo } from "../../../assets/icons/info.svg";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { setLoggedIn, setToken } from '../../../redux/slices/authSlice';
+import { setLoggedIn, setRole, setToken } from '../../../redux/slices/authSlice';
 import { useDispatch } from 'react-redux';
 
 const Login = () => {
@@ -17,20 +17,19 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        console.log("login", email, password, process.env.REACT_APP_BASE_API_URL)
         try {
-            // `${import.meta.env.VITE_APP_BACKEND_BASE_API_URL}/api/customer/stock/shorty-url?url=${shareLink}`
-            const response = await axios.post(`${process.env.REACT_APP_BASE_API_URL}/soham-incense-cost/public/api/v1/login`, { email, password });
-            console.log("response", response)
+            const response = await axios.post(`${process.env.REACT_APP_BASE_PUBLIC_API_URL}/login`, { email, password });
             if (response.status === 200) {
                 navigate("/dashboard")
                 dispatch(setLoggedIn(true));
-                dispatch(setToken(response.data.payload.token));
+                dispatch(setToken(response?.data?.payload?.token));
+                dispatch(setRole(response?.data?.payload?.data?.role))
                 localStorage.setItem('isLoggedIn', JSON.stringify(true));
+                localStorage.setItem('role', response?.data?.payload?.data?.role);
                 localStorage.setItem("token", JSON.stringify(response.data.payload.token))
             }
         } catch (error) {
-
+            console.log("error",error)
         }
 
     }

@@ -9,17 +9,16 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import React, { useEffect, useState } from "react";
-import CustomSwitch from "../../components/common/CustomSwitch";
-import { useDispatch } from "react-redux";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import CustomSwitch from "../../components/common/CustomSwitch";
 import { updateCategory } from "../../redux/slices/categorySlice";
 
 const EditCategory = () => {
   const location = useLocation();
   const categoryData = location.state;
-  console.log("categoryData: ", categoryData);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();

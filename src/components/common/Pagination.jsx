@@ -1,7 +1,9 @@
 import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+const Pagination = ({ currentPage, totalRecords, entries, onPageChange }) => {
+  const totalPages = Math.ceil(totalRecords / entries);
+
   return (
     <Box
       sx={{
