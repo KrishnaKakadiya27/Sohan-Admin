@@ -58,7 +58,28 @@ export default function SidebarList() {
     return dynamicPaths.some((regex) => regex.test(location.pathname));
   };
 
-  const basePaths = [
+  const isActiveRawMaterialMaster = () => {
+    const basePaths = [
+      "/raw_material_master",
+      "/raw_material_master/add",
+    ];
+
+    // Check for exact base paths
+    if (basePaths.includes(location.pathname)) {
+      return true;
+    }
+
+    // Check for dynamic paths, including paths with or without an ID
+    const dynamicPaths = [
+      /^\/raw_material_master\/edit(\/[^/]+)?$/,
+      /^\/raw_material_master\/view(\/[^/]+)?$/
+    ];
+
+    return dynamicPaths.some((regex) => regex.test(location.pathname));
+  };
+
+
+  const basePathsCategories = [
     "/category",
     "/sub-category",
   ];
@@ -150,7 +171,7 @@ export default function SidebarList() {
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
-          color: getTextColor("/raw_material_master"),
+          color: isActiveRawMaterialMaster() ? "#D8942E" :  getTextColor("/raw_material_master"),
         }}
         onClick={() => handleNavigation("/raw_material_master")} // Navigate on click
       >
@@ -197,7 +218,7 @@ export default function SidebarList() {
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
-          color: open === "category" || basePaths.includes(location.pathname) ? "#D8942E" : "inherit", // Highlight when expanded
+          color: open === "category" || basePathsCategories.includes(location.pathname) ? "#D8942E" : "inherit", // Highlight when expanded
         }}
         onClick={() => handleClick("category")} // Expand/collapse only
       >

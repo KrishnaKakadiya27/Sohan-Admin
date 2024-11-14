@@ -252,7 +252,7 @@ const EditRawMaterial = () => {
                                 background: "#ffffff",
                                 color: "#454545",
                             }}
-                            onClick={() => navigate("/operator-master")}
+                            onClick={() => navigate("/raw_material_master")}
                         >
                             Cancel
                         </Button>
