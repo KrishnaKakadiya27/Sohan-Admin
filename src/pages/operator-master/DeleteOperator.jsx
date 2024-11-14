@@ -1,20 +1,17 @@
-import * as React from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import ActionButton from "../../components/common/ActionButton";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useDispatch } from "react-redux";
-import { deleteCategory } from "../../redux/slices/categorySlice"; // Import your deleteCategory thunk
-import toast from "react-hot-toast";
+import * as React from "react";
+import toast, { Toaster } from "react-hot-toast";
 import axiosInstance from "../../axiosInstance";
+import ActionButton from "../../components/common/ActionButton";
 
 export default function DeleteOperator({ id,getListData }) {
   const [open, setOpen] = React.useState(false);
-  const dispatch = useDispatch();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -27,13 +24,15 @@ export default function DeleteOperator({ id,getListData }) {
   const handleDelete = async () => {
     try {
       const response = await axiosInstance.delete(`operationMaster?uuid=${id}`)
-      // toast.success("Category deleted successfully!");
       if (response?.status === 200) {
+        toast.success('Deleted data successfully');
         getListData();
         handleClose();
       }
     } catch (error) {
-      toast.error("Failed to delete category. Please try again.");
+      console.log("error",error);
+      toast.error('Error');
+
     }
   };
 
@@ -88,6 +87,10 @@ export default function DeleteOperator({ id,getListData }) {
           </Button>
         </DialogActions>
       </Dialog>
+      <Toaster
+                    position="top-center"
+                    reverseOrder={false}
+                />
     </React.Fragment>
   );
 }

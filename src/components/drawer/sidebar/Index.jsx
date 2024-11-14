@@ -38,6 +38,32 @@ export default function SidebarList() {
     return dynamicPaths.some((regex) => regex.test(location.pathname));
   };
 
+  const isActivePersonMaster = () => {
+    const basePaths = [
+      "/person-master",
+      "/person-master/add",
+    ];
+
+    // Check for exact base paths
+    if (basePaths.includes(location.pathname)) {
+      return true;
+    }
+
+    // Check for dynamic paths, including paths with or without an ID
+    const dynamicPaths = [
+      /^\/person-master\/edit(\/[^/]+)?$/,
+      /^\/person-master\/view(\/[^/]+)?$/
+    ];
+
+    return dynamicPaths.some((regex) => regex.test(location.pathname));
+  };
+
+  const basePaths = [
+    "/category",
+    "/sub-category",
+  ];
+
+
   const handleClick = (item) => {
     setOpen(open === item ? null : item); // Only expand/collapse, no navigation
   };
@@ -76,7 +102,7 @@ export default function SidebarList() {
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
-          color: getTextColor("/person-master"),
+          color: isActivePersonMaster() ? "#D8942E" : getTextColor("/person-master"),
         }}
         onClick={() => handleNavigation("/person-master")} // Navigate on click
       >
@@ -171,7 +197,7 @@ export default function SidebarList() {
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
-          color: open === "category" ? "#D8942E" : "inherit", // Highlight when expanded
+          color: open === "category" || basePaths.includes(location.pathname) ? "#D8942E" : "inherit", // Highlight when expanded
         }}
         onClick={() => handleClick("category")} // Expand/collapse only
       >

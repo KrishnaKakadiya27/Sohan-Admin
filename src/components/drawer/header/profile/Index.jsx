@@ -10,6 +10,8 @@ import ProfilePic from "../../../../assets/images/profilePic.png";
 import { useNavigate } from "react-router-dom";
 import { setLoggedIn } from "../../../../redux/slices/authSlice";
 import { useDispatch } from "react-redux";
+import toast, { Toaster } from "react-hot-toast";
+import { Avatar } from "@mui/material";
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -54,11 +56,13 @@ const StyledMenu = styled((props) => (
   },
 }));
 
+
 export default function Profile() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const roleName = localStorage.getItem("role");
+  const personName = localStorage.getItem("name");
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -71,8 +75,18 @@ export default function Profile() {
     dispatch(setLoggedIn(false));
     localStorage.setItem('isLoggedIn', JSON.stringify(false));
     localStorage.removeItem("token")
+    toast.success('Logout successfully');
     navigate("/login")
   };
+
+  function stringAvatar(name) {
+    return {
+      sx: {
+        bgcolor: "#D8942E",
+      },
+      children: `${name?.split(' ')[0][0]}${name?.split(' ')[1] ? '' + name.split(' ')[1][0] : ''}`,
+    };
+  }
 
   return (
     <div>
@@ -87,10 +101,11 @@ export default function Profile() {
         className="cursor-pointer"
       >
         <div class="flex items-center gap-4 max-sm:justify-end">
-          <img class="w-[50px] h-[50px] rounded-full" src={ProfilePic} alt="" />
+          {/* <img class="w-[50px] h-[50px] rounded-full" src={ProfilePic} alt="" /> */}
+          <Avatar {...stringAvatar(personName)} />
           <div class="font-medium max-sm:hidden" style={{ lineHeight: "20px" }}>
-            <p className="text-[#D8942E] font-medium ">Anthony Jenkins</p>
-            <p class="text-sm text-[#17263A] text-left  ">Super Admin</p>
+            <p className="text-[#D8942E] font-medium ">{personName}</p>
+            <p class="text-sm text-[#17263A] text-left  ">{roleName}</p>
           </div>
 
           <div className="max-sm:hidden">
@@ -158,6 +173,10 @@ export default function Profile() {
           Sign Out
         </MenuItem>
       </StyledMenu>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
     </div>
   );
 }

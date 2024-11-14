@@ -19,6 +19,10 @@ import EditPersonMaster from "../pages/person-master/EditPersonMaster";
 import PersonMasterRoot from "../pages/person-master/PersonMasterRoot";
 import ViewPersonMaster from "../pages/person-master/ViewPersonMaster";
 import RawMaterialMaster from "../pages/raw-material-master/RawMaterialMaster";
+import RawMaterialMasterRoot from "../pages/raw-material-master/RawMaterialMasterRoot";
+import AddRawMaterial from "../pages/raw-material-master/AddRawMaterial";
+import ViewRawMaterial from "../pages/raw-material-master/ViewRawMaterial";
+import EditRawMaterial from "../pages/raw-material-master/EditRawMaterial";
 
 function RedirectionWrapper({ to }) {
   const queryString = window.location.search;
@@ -91,9 +95,27 @@ const routes = (isLoggedIn) => [
         path: '/machine-master',
         element: <MachineMaster />,
       },
+      // {
+      //   path: '/raw_material_master',
+      //   element: <RawMaterialMaster />,
+      // },
       {
         path: '/raw_material_master',
-        element: <RawMaterialMaster />,
+        element: <RawMaterialMasterRoot />,
+        children: [
+          {
+            path: 'add',
+            element: <AddRawMaterial />,
+          },
+          {
+            path: "view/:id",
+            element: <ViewRawMaterial />
+          },
+          {
+            path: "edit/:id",
+            element: <EditRawMaterial />
+          }
+        ],
       },
       {
         path: '/materials_master',

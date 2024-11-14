@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 import { setLoggedIn, setToken } from './redux/slices/authSlice';
 import Router from './routes';
+import { Toaster } from 'react-hot-toast';
 
 
 function App() {
@@ -30,10 +30,11 @@ function App() {
       <BrowserRouter>
         <Router isLoggedIn={isLoggedin} />
       </BrowserRouter>
-      <Toaster
+      {/* <Toaster
         position="top-center"
         reverseOrder={false}
-      />
+      /> */}
+
     </div>
   );
 }

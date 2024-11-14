@@ -2,6 +2,8 @@ import { Box, Button, Grid, useMediaQuery, useTheme } from '@mui/material';
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../axiosInstance';
+import toast, { Toaster } from 'react-hot-toast';
 
 const AddPersonMaster = () => {
     const theme = useTheme();
@@ -15,6 +17,40 @@ const AddPersonMaster = () => {
     } = useForm({
         mode: 'onSubmit', // Trigger validation on form submit
     });
+
+
+    // Form submission handler
+    const onSubmit = async (data) => {
+
+        try {
+            const response = await axiosInstance.post(`personMaster`, {
+                name: data?.name,
+                mobile_number: data?.mobileNumber,
+                email: data?.email,
+                company_name: data?.companyName,
+                gst_number: data?.gstNumber,
+                address: data?.address,
+                city: data?.city,
+                state: data?.state,
+                country: data?.country,
+                password: data?.password,
+                category: data?.category,
+                role: data?.role
+            })
+
+            if (response.status === 200) {
+                toast.success('Add person master data successfully');
+                navigate("/person-master");
+            }
+
+        } catch (error) {
+            console.log("error", error)
+            toast.error('Error');
+
+        }
+    };
+
+
     return (
         <div className="bg-white py-4 px-[20px] sm:px-[70px]">
             <div className="flex justify-between items-center mb-4">
@@ -30,7 +66,7 @@ const AddPersonMaster = () => {
 
                 <Box
                     component="form"
-                    // onSubmit={handleSubmit(onSubmit)}
+                    onSubmit={handleSubmit(onSubmit)}
                     display="flex"
                     flexDirection="column"
                     flex={1}
@@ -127,6 +163,27 @@ const AddPersonMaster = () => {
                             {errors.gstNumber && <p className="text-red-500 mt-1">{errors.gstNumber?.message}</p>}
                         </Grid>
 
+                        <Grid item xs={12} md={12}>
+                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
+                                Address<span className="text-red-500">*</span>
+                            </label>
+                            <Controller
+                                name="address"
+                                control={control}
+                                defaultValue=""
+                                rules={{ required: 'Address is required' }}
+                                render={({ field }) => (
+                                    <input
+                                        {...field}
+                                        type="text"
+                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
+                                        placeholder="Address"
+                                    />
+                                )}
+                            />
+                            {errors.address && <p className="text-red-500 mt-1">{errors.address?.message}</p>}
+                        </Grid>
+
                         <Grid item xs={12} md={6}>
                             <label className="block text-[17px] font-medium text-gray-700 pb-2">
                                 Role<span className="text-red-500">*</span>
@@ -134,24 +191,55 @@ const AddPersonMaster = () => {
                             <Controller
                                 name="role"
                                 control={control}
-                                defaultValue=""
-                                rules={{ required: 'Role is required' }}
+                                rules={{ required: 'Role is required', validate: (value) => value !== "Select Role" || "Please select a valid role" }}
                                 render={({ field }) => (
                                     <select
-                                        name="category"
+                                        {...field}
+                                        name="role"
                                         // value={formValues.gender}
                                         // onChange={handleChange}
                                         className="mt-1 block w-full rounded-md shadow-sm p-3"
                                         // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
                                         required
+                                        defaultValue={"Select Role"}
+                                        value={field.value || "Select Role"} // Set the selected value
+                                        onChange={(e) => field.onChange(e.target.value)} // Update the selected value
                                     >
-                                        <option value="">Select Category</option>
-                                        <option value="Male">SuperAdmin</option>
-                                        <option value="Female">Admin</option>
+                                        <option disabled value="Select Role">Select Category</option>
+                                        <option value="SuperAdmin">SuperAdmin</option>
+                                        <option value="Admin">Admin</option>
                                     </select>
                                 )}
                             />
                             {errors.role && <p className="text-red-500 mt-1">{errors.role?.message}</p>}
+                        </Grid>
+
+                        <Grid item xs={12} md={6}>
+                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
+                                Category<span className="text-red-500">*</span>
+                            </label>
+                            <Controller
+                                name="category"
+                                control={control}
+                                rules={{ required: 'Category is required', validate: (value) => value !== "Select Category" || "Please select a valid category" }}
+                                render={({ field }) => (
+                                    <select
+                                        {...field}
+                                        name="category"
+                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
+                                        // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
+                                        required
+                                        defaultValue={"Select Category"}
+                                        value={field.value || "Select Category"} // Set the selected value
+                                        onChange={(e) => field.onChange(e.target.value)} // Update the selected value
+                                    >
+                                        <option value="Select Category" disabled>Select Category</option>
+                                        <option value="Main Category">Main Category</option>
+                                        <option value="Sub Category">Sub Category</option>
+                                    </select>
+                                )}
+                            />
+                            {errors.category && <p className="text-red-500 mt-1">{errors.category?.message}</p>}
                         </Grid>
 
                         <Grid item xs={12} md={6}>
@@ -229,27 +317,6 @@ const AddPersonMaster = () => {
                             {errors.country && <p className="text-red-500 mt-1">{errors.country?.message}</p>}
                         </Grid>
 
-                        <Grid item xs={12} md={12}>
-                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                                Address<span className="text-red-500">*</span>
-                            </label>
-                            <Controller
-                                name="address"
-                                control={control}
-                                defaultValue=""
-                                rules={{ required: 'Address is required' }}
-                                render={({ field }) => (
-                                    <input
-                                        {...field}
-                                        type="text"
-                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
-                                        placeholder="Address"
-                                    />
-                                )}
-                            />
-                            {errors.address && <p className="text-red-500 mt-1">{errors.address?.message}</p>}
-                        </Grid>
-
                         <Grid item xs={12} md={6}>
                             <label className="block text-[17px] font-medium text-gray-700 pb-2">
                                 State<span className="text-red-500">*</span>
@@ -292,32 +359,7 @@ const AddPersonMaster = () => {
                             {errors.city && <p className="text-red-500 mt-1">{errors.city?.message}</p>}
                         </Grid>
 
-                        <Grid item xs={12} md={12}>
-                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                                Category<span className="text-red-500">*</span>
-                            </label>
-                            <Controller
-                                name="category"
-                                control={control}
-                                defaultValue=""
-                                rules={{ required: 'Category is required' }}
-                                render={({ field }) => (
-                                    <select
-                                        name="category"
-                                        // value={formValues.gender}
-                                        // onChange={handleChange}
-                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
-                                        // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-                                        required
-                                    >
-                                        <option value="">Select Category</option>
-                                        <option value="Male">SuperAdmin</option>
-                                        <option value="Female">Admin</option>
-                                    </select>
-                                )}
-                            />
-                            {errors.category && <p className="text-red-500 mt-1">{errors.category?.message}</p>}
-                        </Grid>
+
 
                     </Grid>
 
@@ -354,7 +396,10 @@ const AddPersonMaster = () => {
                         </Button>
                     </Box>
                 </Box>
-
+                <Toaster
+                    position="top-right"
+                    reverseOrder={false}
+                />
             </Box>
         </div>
     )

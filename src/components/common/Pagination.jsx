@@ -3,7 +3,6 @@ import { Box, Button, Typography } from "@mui/material";
 
 const Pagination = ({ currentPage, totalRecords, entries, onPageChange }) => {
   const totalPages = Math.ceil(totalRecords / entries);
-
   return (
     <Box
       sx={{
@@ -30,7 +29,7 @@ const Pagination = ({ currentPage, totalRecords, entries, onPageChange }) => {
       </Button>
 
       <Typography variant="h6" sx={{ mx: 2 }}>
-        {currentPage} of {totalPages}
+        {totalPages === 0 ? 0 : currentPage} of {totalPages}
       </Typography>
 
       <Button

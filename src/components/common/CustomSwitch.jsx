@@ -23,8 +23,8 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const CustomSwitch = ({ checked, onChange, ...props }) => {
-  return <StyledSwitch checked={checked} onChange={onChange} {...props} />;
+const CustomSwitch = ({ checked, onChange,disabled, ...props }) => {
+  return <StyledSwitch checked={checked} onChange={onChange} disabled={disabled} {...props} />;
 };
 
 export default CustomSwitch;

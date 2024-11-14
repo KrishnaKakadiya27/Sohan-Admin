@@ -1,6 +1,6 @@
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
@@ -24,6 +24,8 @@ const OperatorMaster = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [operatorData, setOperatorData] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const handleEntriesChange = (event) => {
     setEntries(event.target.value);
@@ -36,6 +38,7 @@ const OperatorMaster = () => {
 
   const handleSearch = (term) => {
     setSearchTerm(term);
+    setCurrentPage(1);
   };
 
   const handlePageChange = (page) => {
@@ -46,17 +49,21 @@ const OperatorMaster = () => {
     getListData();
   }, [currentPage, entries, searchTerm])
 
-
   const getListData = async () => {
 
     try {
-      const response = await axiosInstance.get(`/operationMaster?page=${currentPage}&records_per_page=${entries}&search=${searchTerm}`)
+      setIsLoading(true)
+      const searchValue = searchTerm ? JSON.stringify({ search: searchTerm }) : ""
+      const response = await axiosInstance.get(`/operationMaster?page=${currentPage}&records_per_page=${entries}&search=${searchValue}`)
       if (response.status === 200) {
         setOperatorData(response?.data?.payload?.data)
         setTotalRecords(response?.data?.pager?.total_records)
+        setIsLoading(false)
       }
+
     } catch (error) {
       console.log("error", error)
+      setIsLoading(false)
     }
   }
 
@@ -97,6 +104,7 @@ const OperatorMaster = () => {
       </div>
 
       <TableLayoutBox>
+        {/* <div className="!max-w-[300px]"> */}
         <table className="w-full bg-white rounded-[8px] ">
           <thead className="bg-[#F6F6F6] border border-[#F6F6F6]">
             <tr>
@@ -106,10 +114,10 @@ const OperatorMaster = () => {
               <th className="py-[15px] px-4 text-[#454545] font-medium text-left">
                 Name
               </th>
-              <th className="py-[15px] px-4 text-[#454545] font-medium text-left">
+              <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
                 Mobile Number
               </th>
-              <th className="py-[15px] px-4 text-[#454545] font-medium text-left">
+              <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
                 Aadhar Card Number
               </th>
               <th className="py-[15px] px-4 text-[#454545] font-medium text-left">
@@ -126,77 +134,84 @@ const OperatorMaster = () => {
             </tr>
           </thead>
           <tbody className="border">
-            {operatorData?.map((item, index) => (
-              <tr key={index}>
+            {isLoading && operatorData?.length === 0 ?
+              <tr>
+                <td colSpan={12} className="py-2 px-4  text-center">
+                  <CircularProgress />
+                </td>
+              </tr>
+              : (operatorData?.length > 0 ? operatorData?.map((item, index) => (
+                <tr key={index}>
 
-                <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
-                  {item?.operator_master_id}
-                </td>
-                <td className="py-2 border-[1px] border-[#D0D0D0] min-w-[200px]  px-4 border-b">
-                  {item?.name}
-                </td>
-                <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                  {item?.mobile_number}
-                </td>
-                <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                  {item?.adhar_card_number}
-                </td>
-                <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                  {item?.state ?? "-"}
-                </td>
-                <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                  {item?.city ?? "-"}
-                </td>
-                <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                  {item?.country ?? "-"}
-                </td>
-                {/* <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
+                  <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
+                    {item?.operator_master_id}
+                  </td>
+                  <td className="py-2 border-[1px] border-[#D0D0D0] min-w-[200px]  px-4 border-b">
+                    {item?.name}
+                  </td>
+                  <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                    {item?.mobile_number}
+                  </td>
+                  <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                    {item?.adhar_card_number}
+                  </td>
+                  <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                    {item?.state ?? "-"}
+                  </td>
+                  <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                    {item?.city ?? "-"}
+                  </td>
+                  <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                    {item?.country ?? "-"}
+                  </td>
+                  {/* <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
                   <CustomSwitch
                     checked={checked}
                     onChange={handleChangeSwitch}
                   />
                 </td> */}
-                <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "10px",
-                    }}
-                  >
-                    {/* View Button */}
-                    <ActionButton
-                      icon={<VisibilityIcon />}
-                      label="View"
-                      color="#3f3f3f"
-                      onClick={() => navigate(`/operator-master/view/${item?.uuid}`)}
-                    />
-
-                    {/* Edit Button */}
-                    <ActionButton
-                      icon={<EditIcon />}
-                      label="Edit"
-                      color="#1976d2"
-                      onClick={() => navigate(`/operator-master/edit/${item?.uuid}`)}
-                    />
-
-                    {/* Delete Button */}
-                    {/* <ActionButton
-                      icon={<DeleteIcon />}
-                      label="Delete"
-                      color="#d32f2f"
-                      onClick={() => {handleDelete(item?.uuid)
-                        setOperatorId(item?.uuid)
+                  <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "10px",
                       }}
-                    /> */}
-                    <DeleteOperator id={item?.uuid} getListData={getListData} />
-                  </div>
-                </td>
-              </tr>
-            ))}
+                    >
+                      {/* View Button */}
+                      <ActionButton
+                        icon={<VisibilityIcon />}
+                        label="View"
+                        color="#3f3f3f"
+                        onClick={() => navigate(`/operator-master/view/${item?.uuid}`)}
+                      />
+
+                      {/* Edit Button */}
+                      <ActionButton
+                        icon={<EditIcon />}
+                        label="Edit"
+                        color="#1976d2"
+                        onClick={() => navigate(`/operator-master/edit/${item?.uuid}`)}
+                      />
+
+                      {/* Delete Button */}
+                      <DeleteOperator id={item?.uuid} getListData={getListData} />
+                    </div>
+                  </td>
+                </tr>
+              ))
+                :
+                <tr>
+                  <td colSpan={8} className="py-2 px-4  text-center text-nowrap">
+                    No Operator Master Data Found
+                  </td>
+                </tr>)
+            }
+
           </tbody>
         </table>
+        {/* </div> */}
       </TableLayoutBox>
 
       <Pagination

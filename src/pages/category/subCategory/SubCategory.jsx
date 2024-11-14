@@ -1,30 +1,61 @@
-import React, { useState } from "react";
+import { Button, CircularProgress, useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import toast, { Toaster } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../../axiosInstance";
+import CustomSwitch from "../../../components/common/CustomSwitch";
 import EntriesSelector from "../../../components/common/EntriesSelector";
 import Pagination from "../../../components/common/Pagination";
 import SearchBar from "../../../components/common/SearchBar";
-import ActionButton from "../../../components/common/ActionButton";
-import CustomSwitch from "../../../components/common/CustomSwitch";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, Button } from "@mui/material";
-import profileImage from "../../../assets/icons/profileImage.svg";
-import useWindowWidth from "../../../customHooks/useWindowWidth";
 import TableLayoutBox from "../../../components/common/TableLayoutBox";
+import { selectCategories, selectLoading, selectNoData } from "../../../redux/slices/categorySlice";
+import AddSubCategory from "./AddSubCategory";
+import DeleteSubCategory from "./DeleteSubCategory";
+import EditSubCategory from "./EditSubCategory";
+
 
 const SubCategory = () => {
-  const windowWidth = useWindowWidth();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const categories = useSelector(selectCategories);
+  const loading = useSelector(selectLoading);
+  const noData = useSelector(selectNoData);
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [checked, setChecked] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [subCategoryData, setSubCategoryData] = useState([]);
+  const [openAdd, setOpenAdd] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+
+  // useForm setup with validation rules
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset
+  } = useForm({
+    mode: 'onSubmit', // Trigger validation on form submit
+  });
+
+  const handleClickOpen = () => {
+    setOpenAdd(true);
+  };
+
+  const handleClose = () => {
+    setOpenAdd(false);
+  };
+
 
   const handleEntriesChange = (event) => {
     setEntries(event.target.value);
-  };
-
-  const handleChangeSwitch = () => {
-    setChecked((prev) => !prev);
   };
 
   const handleSearch = (term) => {
@@ -34,6 +65,49 @@ const SubCategory = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  // Form submission handler
+  const onSubmit = async (data) => {
+    try {
+      const response = await axiosInstance.post(`subCategoryMaster`, {
+        name: data?.name,
+        is_active: data?.activeStatus,
+        // category_master_uuid:
+      })
+
+      if (response.status === 200) {
+        toast.success('Add category successfully');
+        handleClose();
+        getCategoryData();
+      }
+
+    } catch (error) {
+      console.log("error", error)
+      toast.error("Error")
+    }
+  };
+
+  useEffect(() => {
+    getCategoryData();
+  }, [currentPage, entries, searchTerm])
+
+  const getCategoryData = async () => {
+
+    try {
+      setIsLoading(true);
+      const searchValue = searchTerm ? JSON.stringify({ search: searchTerm }) : ""
+      const response = await axiosInstance.get(`/subCategoryMaster?page=${currentPage}&records_per_page=${entries}&search=${searchValue}`)
+      if (response.status === 200) {
+        setSubCategoryData(response?.data?.payload?.data)
+        setTotalRecords(response?.data?.pager?.total_records)
+        setIsLoading(false)
+      }
+    } catch (error) {
+      console.log("error", error)
+      setIsLoading(false)
+    }
+  }
+
 
   return (
     <div className="bg-white p-4">
@@ -61,6 +135,10 @@ const SubCategory = () => {
               borderRadius: "25px",
               fontSize: { xs: "12px", sm: "13px" },
             }}
+            onClick={() => {
+              handleClickOpen();
+              reset();
+            }}
           >
             Add New Category
           </Button>
@@ -68,98 +146,81 @@ const SubCategory = () => {
       </div>
 
       <TableLayoutBox>
-        <table className="w-full bg-white rounded-[8px] ">
-          <thead className="bg-[#F6F6F6] border border-[#F6F6F6]">
-            <tr>
-              <th className="py-[15px] px-4 text-[#454545] font-medium">
-                Profile
-              </th>
-              <th className="py-[15px] px-4 text-[#454545] font-medium">
-                Sort
-              </th>
-              <th className="py-[15px] px-4 text-[#454545] font-medium">
-                Name
-              </th>
-              <th className="py-[15px] px-4 text-[#454545] font-medium">
-                Description
-              </th>
-              <th className="py-[15px] px-4 text-[#454545] font-medium">
-                Type
-              </th>
-              <th className="py-2 px-4 text-[#454545] font-medium">Status</th>
-              <th className="py-2 px-4 text-[#454545] font-medium">Action</th>
-            </tr>
-          </thead>
-          <tbody className="border">
-            {Array.from({ length: 9 }).map((_, index) => (
-              <tr key={index}>
-                <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
-                  <img
-                    src={profileImage}
-                    alt=""
-                    className="bock mx-auto w-[40px]"
-                  />
-                </td>
-                <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
-                  {index + 1}
-                </td>
-                <td className="py-2 border-[1px] border-[#D0D0D0] min-w-[200px]  px-4 border-b">
-                  You can check - FL shop
-                </td>
-                <td className="py-2 min-w-[300px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                  Characterful 2 double bedroom house end of terrace immaculate
-                  condition great location 7.5% yield
-                </td>
-                <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
-                  -
-                </td>
-                <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
-                  <CustomSwitch
-                    checked={checked}
-                    onChange={handleChangeSwitch}
-                  />
-                </td>
-                <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "10px",
-                    }}
-                  >
-                    {/* View Button */}
-                    <ActionButton
-                      icon={<VisibilityIcon />}
-                      label="View"
-                      color="#3f3f3f"
-                    />
-
-                    {/* Edit Button */}
-                    <ActionButton
-                      icon={<EditIcon />}
-                      label="Edit"
-                      color="#1976d2"
-                    />
-
-                    {/* Delete Button */}
-                    <ActionButton
-                      icon={<DeleteIcon />}
-                      label="Delete"
-                      color="#d32f2f"
-                    />
-                  </div>
-                </td>
+        {/* className ="!max-w-[300px]" */}
+        <div className="">
+          <table className="w-full bg-white rounded-[8px] ">
+            <thead className="bg-[#F6F6F6] border border-[#F6F6F6]">
+              <tr>
+                <th className="py-[15px] px-4 text-[#454545] font-medium">
+                  Main Category Name
+                </th>
+                <th className="py-[15px] px-4 text-[#454545] text-left font-medium">
+                  Sub Category Name
+                </th>
+                <th className="py-[15px] px-4 text-[#454545] font-medium">
+                  Status
+                </th>
+                <th className="py-2 px-4 text-[#454545] font-medium">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="border">
+              {isLoading && subCategoryData?.length === 0 ?
+                <tr>
+                  <td colSpan={12} className="py-2 px-4  text-center">
+                    <CircularProgress />
+                  </td>
+                </tr>
+                : (subCategoryData?.length > 0 ? subCategoryData?.map((item, index) => (
+                  <tr key={index}>
+                    <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
+                      {item?.categoryMasterDetail?.name}
+                    </td>
+                    <td className="py-2 border-[1px] border-[#D0D0D0] min-w-[200px]  px-4 border-b">
+                      {item?.name}
+                    </td>
+
+                    <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
+                      <CustomSwitch checked={item?.is_active ?? false} disabled={true} />
+                    </td>
+                    <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "10px",
+                        }}
+                      >
+                        <EditSubCategory id={item?.uuid} getCategoryData={getCategoryData} />
+                        {/* Delete Button */}
+                        <DeleteSubCategory id={item?.uuid} getCategoryData={getCategoryData} />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+                  :
+                  <tr>
+                    <td colSpan={12} className="py-2 px-4  text-center text-nowrap">
+                      No Category Found
+                    </td>
+                  </tr>)
+              }
+
+            </tbody>
+          </table>
+        </div>
       </TableLayoutBox>
 
       <Pagination
         currentPage={currentPage}
-        totalPages={3} // Example total pages
+        totalRecords={totalRecords}
+        entries={entries}
         onPageChange={handlePageChange}
+      />
+      {openAdd && <AddSubCategory getCategoryData={getCategoryData} openAdd={openAdd} handleClose={handleClose} handleSubmit={handleSubmit} onSubmit={onSubmit} control={control} reset={reset} errors={errors} />}
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
       />
     </div>
   );

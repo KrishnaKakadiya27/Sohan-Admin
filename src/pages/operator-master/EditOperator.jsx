@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
+import toast, { Toaster } from 'react-hot-toast';
 
 const AddOperator = () => {
     const theme = useTheme();
@@ -42,13 +43,17 @@ const AddOperator = () => {
 
             if (response.status === 200) {
                 navigate("/operator-master");
+                toast.success('Updated data successfully');
+
             }
 
         } catch (error) {
             console.log("error", error)
+            toast.error('Errror');
         }
         // Perform form submission actions here
     };
+    
     useEffect(() => {
         getOperatorDataById();
     }, [])
@@ -353,6 +358,10 @@ const AddOperator = () => {
                 </Box>
 
             </Box>
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+            />
         </div>
     );
 }

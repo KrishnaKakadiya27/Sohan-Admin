@@ -6,12 +6,13 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { setLoggedIn, setRole, setToken } from '../../../redux/slices/authSlice';
 import { useDispatch } from 'react-redux';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
 
 
@@ -22,14 +23,17 @@ const Login = () => {
             if (response.status === 200) {
                 navigate("/dashboard")
                 dispatch(setLoggedIn(true));
+                toast.success('Login successfully');
                 dispatch(setToken(response?.data?.payload?.token));
                 dispatch(setRole(response?.data?.payload?.data?.role))
                 localStorage.setItem('isLoggedIn', JSON.stringify(true));
                 localStorage.setItem('role', response?.data?.payload?.data?.role);
+                localStorage.setItem('name', response?.data?.payload?.data?.name);
                 localStorage.setItem("token", JSON.stringify(response.data.payload.token))
             }
         } catch (error) {
-            console.log("error",error)
+            console.log("error", error)
+            toast.error('Error');
         }
 
     }
@@ -82,9 +86,11 @@ const Login = () => {
                         </button>
                     </form>
                 </div>
+                <Toaster
+                    position="top-center"
+                    reverseOrder={false}
+                />
             </div>
-
-            {/* Right section - Images (hidden on mobile) */}
 
         </div>
 
