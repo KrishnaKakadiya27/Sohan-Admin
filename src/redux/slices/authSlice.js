@@ -15,6 +15,7 @@ const initialState = {
     user: null,
     role:null,
     isLoggedIn: !!JSON.parse(localStorage.getItem('isLoggedIn')),
+    isOpen:true
 };
 
 const authSlice = createSlice({
@@ -29,6 +30,9 @@ const authSlice = createSlice({
         },
         setRole: (state, action) => {
             state.role = action.payload;
+        },
+        setDrawerOpen: (state, action) => {
+            state.isOpen = action.payload;
         },
         setUser: (state, action) => {
             state.user = action.payload;
@@ -48,5 +52,5 @@ const authSlice = createSlice({
 
 const { reducer, actions } = authSlice;
 
-export const { setToken, setUser, setLoggedIn ,setRole} = actions;
+export const { setToken, setUser, setLoggedIn ,setRole,setDrawerOpen} = actions;
 export default reducer;

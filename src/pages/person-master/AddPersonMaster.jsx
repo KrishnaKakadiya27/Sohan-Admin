@@ -173,10 +173,10 @@ const AddPersonMaster = () => {
                                 defaultValue=""
                                 rules={{ required: 'Address is required' }}
                                 render={({ field }) => (
-                                    <input
+                                    <textarea
                                         {...field}
                                         type="text"
-                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
+                                        className="mt-1 min-h-[200px] block w-full rounded-md shadow-sm p-3"
                                         placeholder="Address"
                                     />
                                 )}

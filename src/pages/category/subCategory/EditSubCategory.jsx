@@ -20,6 +20,8 @@ const EditSubCategory = ({ id, getCategoryData }) => {
     const [catIdName, setCatIdName] = useState("");
     const [catId, setCatId] = useState("");
     const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectCatFlag, setSelectCatFlag] = useState(false)
+
 
     const handleOpenDialog = () => {
         setDialogOpen(!dialogOpen);
@@ -88,7 +90,7 @@ const EditSubCategory = ({ id, getCategoryData }) => {
             })
 
             if (response.status === 200) {
-                toast.success('Update category successfully');
+                toast.success('Update sub-category successfully');
                 handleClose();
                 getCategoryData();
             }
@@ -179,6 +181,7 @@ const EditSubCategory = ({ id, getCategoryData }) => {
                                                         open={dialogOpen}
                                                         setOpen={setDialogOpen}
                                                         catIdName={catIdName}
+                                                        setSelectCatFlag={setSelectCatFlag}
                                                         setCatId={(id) => {
                                                             setValue("cat_id", id, id);
                                                             setCatIdName(id?.name)

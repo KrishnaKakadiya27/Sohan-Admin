@@ -237,7 +237,7 @@ const AddOperator = () => {
 
 
             <Grid item xs={12} md={6}>
-              <label className="block text-[17px] font-medium text-gray-700 pb-2">
+              <label className="block text-[17px] font-medium text-gray-700 pb-2 text-nowrap">
                 Working Hours without Lunch<span className="text-red-500">*</span>
               </label>
               <Controller

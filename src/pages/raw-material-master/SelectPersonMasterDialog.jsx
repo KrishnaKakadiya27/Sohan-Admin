@@ -4,13 +4,12 @@ import { CircularProgress, List, ListItem } from '@mui/material';
 import axiosInstance from '../../axiosInstance';
 import SearchBar from '../../components/common/SearchBar';
 
-const SelectPersonMasterDialog = ({ open, setPersonId, setOpen, personIdName }) => {
+const SelectPersonMasterDialog = ({ open, setPersonId, setOpen, personIdName, searchTerm,setSearchTerm }) => {
 
   const [personName, setPersonName] = useState([]);
   const [page, setPage] = useState(1);
   const [recordsPerPage] = useState(10);
   const [hasMore, setHasMore] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
 
   // Ref to detect outside clicks
   const dialogRef = useRef(null);

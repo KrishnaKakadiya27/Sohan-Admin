@@ -119,8 +119,28 @@ const ViewRawMaterial = () => {
                                         {...field}
                                         type="text"
                                         className="mt-1 block w-full rounded-md shadow-sm p-3"
-                                        placeholder="Country"
+                                        placeholder="Price Per Unit"
                                         value={rawMaterialData?.price_per_unit}
+                                    />
+                                )}
+                            />
+                        </Grid>
+
+                        <Grid item xs={12} md={6}>
+                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
+                                Unit<span className="text-red-500">*</span>
+                            </label>
+                            <Controller
+                                name="country"
+                                control={control}
+                                defaultValue=""
+                                render={({ field }) => (
+                                    <input
+                                        {...field}
+                                        type="text"
+                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
+                                        placeholder="Unit"
+                                        value={rawMaterialData?.unit}
                                     />
                                 )}
                             />

@@ -23,6 +23,14 @@ import RawMaterialMasterRoot from "../pages/raw-material-master/RawMaterialMaste
 import AddRawMaterial from "../pages/raw-material-master/AddRawMaterial";
 import ViewRawMaterial from "../pages/raw-material-master/ViewRawMaterial";
 import EditRawMaterial from "../pages/raw-material-master/EditRawMaterial";
+import MaterialMasterRoot from "../pages/material-master/MaterialMasterRoot";
+import AddMaterialMaster from "../pages/material-master/AddMaterialMaster";
+import ViewMaterialMaster from "../pages/material-master/ViewMaterialMaster";
+import EditMaterialMaster from "../pages/material-master/EditMaterialMaster";
+import MachineMasterRoot from "../pages/machine-master/MachineMasterRoot";
+import AddMachineMaster from "../pages/machine-master/AddMachineMaster";
+import ViewMachineMaster from "../pages/machine-master/ViewMachineMaster";
+import EditMachineMaster from "../pages/machine-master/EditMachineMaster";
 
 function RedirectionWrapper({ to }) {
   const queryString = window.location.search;
@@ -87,18 +95,28 @@ const routes = (isLoggedIn) => [
         path: '/add-oprator-master',
         element: <AddOperator />,
       },
-      {
-        path: '/item-master',
-        element: <ItemMaster />,
-      },
+      // {
+      //   path: '/item-master',
+      //   element: <ItemMaster />,
+      // },
       {
         path: '/machine-master',
-        element: <MachineMaster />,
+        element: <MachineMasterRoot />,
+        children: [
+          {
+            path: 'add',
+            element: <AddMachineMaster />,
+          },
+          {
+            path: "view/:id",
+            element: <ViewMachineMaster />
+          },
+          {
+            path: "edit/:id",
+            element: <EditMachineMaster />
+          }
+        ],
       },
-      // {
-      //   path: '/raw_material_master',
-      //   element: <RawMaterialMaster />,
-      // },
       {
         path: '/raw_material_master',
         element: <RawMaterialMasterRoot />,
@@ -118,8 +136,22 @@ const routes = (isLoggedIn) => [
         ],
       },
       {
-        path: '/materials_master',
-        element: <MaterialMaster />,
+        path: '/item-master',
+        element: <MaterialMasterRoot />,
+        children: [
+          {
+            path: 'add',
+            element: <AddMaterialMaster />,
+          },
+          {
+            path: "view/:id",
+            element: <ViewMaterialMaster />
+          },
+          {
+            path: "edit/:id",
+            element: <EditMaterialMaster />
+          }
+        ],
       },
       {
         path: '/category',

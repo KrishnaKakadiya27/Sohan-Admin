@@ -2,7 +2,7 @@ import React from 'react'
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch } from 'react-redux';
 import axiosInstance from '../../axiosInstance';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import ActionButton from '../../components/common/ActionButton';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
@@ -22,10 +22,12 @@ const DeleteRawMaterial = ({id,getListData}) => {
             const response = await axiosInstance.delete(`rawMaterialMaster?uuid=${id}`)
             if (response?.status === 200) {
                 getListData();
+                toast.success("Deleted data successfully")
                 handleClose();
             }
         } catch (error) {
             console.log("error",error)
+            toast.error("Error")
         }
     };
 
@@ -43,10 +45,10 @@ const DeleteRawMaterial = ({id,getListData}) => {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle id="alert-dialog-title">{"Delete Operator"}</DialogTitle>
+                <DialogTitle id="alert-dialog-title">{"Delete Raw Material"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Are you sure you want to delete this operator? This action cannot be
+                        Are you sure you want to delete this raw material? This action cannot be
                         undone.
                     </DialogContentText>
                 </DialogContent>

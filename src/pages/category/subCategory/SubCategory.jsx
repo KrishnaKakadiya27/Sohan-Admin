@@ -152,6 +152,9 @@ const SubCategory = () => {
             <thead className="bg-[#F6F6F6] border border-[#F6F6F6]">
               <tr>
                 <th className="py-[15px] px-4 text-[#454545] font-medium">
+                  Id
+                </th>
+                <th className="py-[15px] px-4 text-[#454545] font-medium">
                   Main Category Name
                 </th>
                 <th className="py-[15px] px-4 text-[#454545] text-left font-medium">
@@ -172,6 +175,9 @@ const SubCategory = () => {
                 </tr>
                 : (subCategoryData?.length > 0 ? subCategoryData?.map((item, index) => (
                   <tr key={index}>
+                    <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
+                      {item?.sub_category_master_id}
+                    </td>
                     <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
                       {item?.categoryMasterDetail?.name}
                     </td>

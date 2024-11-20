@@ -44,7 +44,8 @@ const EditRawMaterial = () => {
                 name: data?.name,
                 person_master_id: data?.person_id?.uuid,
                 price_per_unit: data?.pricePerUnit,
-                root_level: data?.rootLevel
+                root_level: data?.rootLevel,
+                unit: data?.unit
             })
 
             if (response.status === 200) {
@@ -82,6 +83,7 @@ const EditRawMaterial = () => {
             setValue("name", rawMaterialData?.name);
             setValue("pricePerUnit", rawMaterialData?.price_per_unit);
             setValue("rootLevel", rawMaterialData?.root_level);
+            setValue("unit", rawMaterialData?.unit);
             if (rawMaterialData?.personMasterDetailes?.name) {
                 setValue("person_id", rawMaterialData?.personMasterDetailes?.name);
                 setCatIdName(rawMaterialData?.personMasterDetailes?.name);
@@ -205,6 +207,31 @@ const EditRawMaterial = () => {
                                 )}
                             />
                             {errors.pricePerUnit && <p className="text-red-500 mt-1">{errors.pricePerUnit?.message}</p>}
+                        </Grid>
+
+                        <Grid item xs={12} md={6}>
+                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
+                            Unit<span className="text-red-500">*</span>
+                            </label>
+                            <Controller
+                                name="unit"
+                                control={control}
+                                rules={{
+                                    required: 'Unit is required', pattern: {
+                                        value: /^\d*$/,
+                                        message: 'Unit must be a number',
+                                    },
+                                }}
+                                render={({ field }) => (
+                                    <input
+                                        {...field}
+                                        type="text"
+                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
+                                        placeholder="Unit"
+                                    />
+                                )}
+                            />
+                            {errors.unit && <p className="text-red-500 mt-1">{errors.unit?.message}</p>}
                         </Grid>
 
                         <Grid item xs={12} md={6}>

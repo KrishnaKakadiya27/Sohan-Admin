@@ -4,7 +4,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { CircularProgress, List, ListItem } from '@mui/material';
 import SearchBar from '../../../components/common/SearchBar';
 
-const SelectCategoryDialog = ({ open, setCatId, setOpen, catIdName }) => {
+const SelectCategoryDialog = ({ open, setCatId, setOpen, catIdName ,setSelectCatFlag}) => {
 
   const [categories, setCategories] = useState([]);
   const [page, setPage] = useState(1);
@@ -96,6 +96,7 @@ const SelectCategoryDialog = ({ open, setCatId, setOpen, catIdName }) => {
                 sx={{ px: "25px", py: "10px", cursor: "pointer" }}
                 onClick={() => {
                   setCatId({ id: category.category_master_id, uuid: category.uuid, name: category.name });
+                  setSelectCatFlag(true);
                   setOpen(false);
                 }}
               >

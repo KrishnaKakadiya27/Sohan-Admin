@@ -13,6 +13,9 @@ import Logo from "../../assets/icons/logo.svg";
 import ProfilePic from "../../assets/images/profilePic.png";
 import Header from "./header";
 import SidebarList from "./sidebar/Index";
+import Stick from "../../assets/images/stick.png"
+import { useDispatch, useSelector } from "react-redux";
+import { setDrawerOpen } from "../../redux/slices/authSlice";
 
 const drawerWidth = 285;
 
@@ -66,18 +69,35 @@ const AppBar = styled(MuiAppBar, {
 
 export default function DrawerBox(props) {
   const theme = useTheme();
+  const dispatch = useDispatch();
   const [open, setOpen] = React.useState(true);
-
+  const roleName = localStorage.getItem("role");
+  const personName = localStorage.getItem("name");
+ 
   // Use media query to determine if the screen width is less than 600px (mobile)
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
 
   const handleDrawerOpen = () => {
     setOpen(!open);
+    dispatch(setDrawerOpen(!open))
+    localStorage.setItem("isOpen",!open)
   };
 
   const handleDrawerClose = () => {
     setOpen(false);
+    dispatch(setDrawerOpen(false))
+    localStorage.setItem("isOpen",false)
   };
+
+
+  function stringAvatar(name) {
+    return {
+      sx: {
+        bgcolor: "#D8942E",
+      },
+      children: `${name?.split(' ')[0][0]}${name?.split(' ')[1] ? '' + name.split(' ')[1][0] : ''}`,
+    };
+  }
 
   return (
     <Box
@@ -114,18 +134,18 @@ export default function DrawerBox(props) {
       >
         <div>
           <div className="flex flex-col items-center justify-center w-full p-[30px]">
-            <img src={Logo} alt="" className="w-[80px] mb-4" />
-            <Avatar
-              alt="Remy Sharp"
-              src={ProfilePic}
-              sx={{ width: 56, height: 56 }}
-            />
+            {/* <img src={Logo} alt="" className="w-[80px] mb-4" /> */}
+            <div className="flex gap-2">
+              <p className="font-extrabold text-5xl">Soham</p>
+              <img src={Stick} width={30} height={30} />
+            </div>
+            {/* <Avatar {...stringAvatar(personName)} />
             <p className="text-[#D8942E] text-[14px] font-medium ">
-              Anthony Jenkins
+              {personName}
             </p>
             <p className="text-[#8C8C8C] text-[14px] ">
-              anthonyjenkins@gmail.com
-            </p>
+              {roleName}
+            </p> */}
           </div>
         </div>
         <Divider />

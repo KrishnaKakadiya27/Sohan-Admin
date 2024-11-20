@@ -15,6 +15,7 @@ const AddSubCategory = ({ openAdd, handleClose, getCategoryData }) => {
     const [catIdName, setCatIdName] = useState("");
     const [catId, setCatId] = useState("");
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [selectCatFlag, setSelectCatFlag] = useState(false)
 
     const handleOpenDialog = () => {
         setDialogOpen(!dialogOpen);
@@ -39,7 +40,7 @@ const AddSubCategory = ({ openAdd, handleClose, getCategoryData }) => {
             })
 
             if (response.status === 200) {
-                toast.success('Add category successfully');
+                toast.success('Add sub-category successfully');
                 handleClose();
                 getCategoryData();
             }
@@ -119,6 +120,7 @@ const AddSubCategory = ({ openAdd, handleClose, getCategoryData }) => {
                                                         open={dialogOpen}
                                                         setOpen={setDialogOpen}
                                                         catIdName={catIdName}
+                                                        setSelectCatFlag={setSelectCatFlag}
                                                         setCatId={(id) => {
                                                             // setValue("cat_id", id,id);
                                                             setCatIdName(id?.name)

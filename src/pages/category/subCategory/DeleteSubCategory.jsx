@@ -21,7 +21,7 @@ const DeleteSubCategory = ({ id ,getCategoryData}) => {
         try {
             const response = await axiosInstance.delete(`subCategoryMaster?uuid=${id}`)
             if (response?.status === 200) {
-                toast.success('Deleted category successfully');
+                toast.success('Deleted sub-category successfully');
                 getCategoryData();
                 handleClose();
             }

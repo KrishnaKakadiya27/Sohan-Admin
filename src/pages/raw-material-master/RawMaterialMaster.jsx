@@ -103,7 +103,7 @@ const RawMaterialMaster = () => {
       </div>
 
       <TableLayoutBox>
-        {/* <div className="!max-w-[300px]"> */}
+        {/* <div className="!max-w-[800px]"> */}
         <table className="w-full bg-white rounded-[8px] ">
           <thead className="bg-[#F6F6F6] border border-[#F6F6F6]">
             <tr>
@@ -115,6 +115,9 @@ const RawMaterialMaster = () => {
               </th>
               <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
                 Person Master Name
+              </th>
+              <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
+                Unit
               </th>
               <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
                 Price Per Unit
@@ -143,6 +146,9 @@ const RawMaterialMaster = () => {
                   </td>
                   <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
                     {item?.personMasterDetailes?.name}
+                  </td>
+                  <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                    {item?.unit}
                   </td>
                   <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
                     {item?.price_per_unit}
@@ -188,7 +194,6 @@ const RawMaterialMaster = () => {
                   </td>
                 </tr>)
             }
-
           </tbody>
         </table>
         {/* </div> */}

@@ -101,7 +101,7 @@ const PersonMaster = () => {
         </div>
       </div>
       <TableLayoutBox>
-        <div className='!max-w-[300px]'>
+        {/* <div className='!max-w-[300px]'> */}
           <table className="w-full bg-white rounded-[8px] ">
             <thead className="bg-[#F6F6F6] border border-[#F6F6F6]">
               <tr>
@@ -231,7 +231,7 @@ const PersonMaster = () => {
               }
             </tbody>
           </table>
-        </div>
+        {/* </div> */}
       </TableLayoutBox>
 
       <Pagination

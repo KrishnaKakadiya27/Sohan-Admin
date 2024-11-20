@@ -78,6 +78,46 @@ export default function SidebarList() {
     return dynamicPaths.some((regex) => regex.test(location.pathname));
   };
 
+  const isActiveMachineMaster = () => {
+    const basePaths = [
+      "/machine-master",
+      "/machine-master/add",
+    ];
+
+    // Check for exact base paths
+    if (basePaths.includes(location.pathname)) {
+      return true;
+    }
+
+    // Check for dynamic paths, including paths with or without an ID
+    const dynamicPaths = [
+      /^\/machine-master\/edit(\/[^/]+)?$/,
+      /^\/machine-master\/view(\/[^/]+)?$/
+    ];
+
+    return dynamicPaths.some((regex) => regex.test(location.pathname));
+  };
+
+  const isActiveItemMaster = () => {
+    const basePaths = [
+      "/item-master",
+      "/item-master/add",
+    ];
+
+    // Check for exact base paths
+    if (basePaths.includes(location.pathname)) {
+      return true;
+    }
+
+    // Check for dynamic paths, including paths with or without an ID
+    const dynamicPaths = [
+      /^\/item-master\/edit(\/[^/]+)?$/,
+      /^\/item-master\/view(\/[^/]+)?$/
+    ];
+
+    return dynamicPaths.some((regex) => regex.test(location.pathname));
+  };
+
 
   const basePathsCategories = [
     "/category",
@@ -150,7 +190,7 @@ export default function SidebarList() {
       </ListItemButton>
 
 
-      {/* Item Master */}
+      {/* Item Master
       <ListItemButton
         sx={{
           py: "12px",
@@ -163,7 +203,7 @@ export default function SidebarList() {
           <Dashboard width={"20"} color="grey" />
         </ListItemIcon>
         <ListItemText primary="Item Master" />
-      </ListItemButton>
+      </ListItemButton> */}
 
 
       {/* raw material Master */}
@@ -171,7 +211,7 @@ export default function SidebarList() {
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
-          color: isActiveRawMaterialMaster() ? "#D8942E" :  getTextColor("/raw_material_master"),
+          color: isActiveRawMaterialMaster() ? "#D8942E" : getTextColor("/raw_material_master"),
         }}
         onClick={() => handleNavigation("/raw_material_master")} // Navigate on click
       >
@@ -182,19 +222,19 @@ export default function SidebarList() {
       </ListItemButton>}
 
 
-      {/* Materials Master */}
+      {/* Item Master */}
       {role === "superadmin" && <ListItemButton
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
-          color: getTextColor("/materials_master"),
+          color: isActiveItemMaster() ? "#D8942E" : getTextColor("/item-master"),
         }}
-        onClick={() => handleNavigation("/materials_master")} // Navigate on click
+        onClick={() => handleNavigation("/item-master")} // Navigate on click
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
           <Dashboard width={"20"} color="grey" />
         </ListItemIcon>
-        <ListItemText primary="Materials Master" />
+        <ListItemText primary="Item Master" />
       </ListItemButton>}
 
 
@@ -203,7 +243,7 @@ export default function SidebarList() {
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
-          color: getTextColor("/machine-master"),
+          color: isActiveMachineMaster() ? "#D8942E" : getTextColor("/machine-master"),
         }}
         onClick={() => handleNavigation("/machine-master")} // Navigate on click
       >

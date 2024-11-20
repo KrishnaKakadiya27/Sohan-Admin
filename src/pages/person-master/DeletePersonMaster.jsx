@@ -52,7 +52,7 @@ const DeletePersonMaster = ({id,getListData}) => {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle id="alert-dialog-title">{"Delete Operator"}</DialogTitle>
+                <DialogTitle id="alert-dialog-title">{"Delete Person Master"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
                         Are you sure you want to delete this operator? This action cannot be
