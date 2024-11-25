@@ -205,7 +205,7 @@ const AddPersonMaster = () => {
                                         value={field.value || "Select Role"} // Set the selected value
                                         onChange={(e) => field.onChange(e.target.value)} // Update the selected value
                                     >
-                                        <option disabled value="Select Role">Select Category</option>
+                                        <option disabled value="Select Role">Select Role</option>
                                         <option value="SuperAdmin">SuperAdmin</option>
                                         <option value="Admin">Admin</option>
                                     </select>
@@ -234,8 +234,8 @@ const AddPersonMaster = () => {
                                         onChange={(e) => field.onChange(e.target.value)} // Update the selected value
                                     >
                                         <option value="Select Category" disabled>Select Category</option>
-                                        <option value="Main Category">Main Category</option>
-                                        <option value="Sub Category">Sub Category</option>
+                                        <option value="MAIN USER">MAIN USER</option>
+                                        <option value="SUB USER">SUB USER</option>
                                     </select>
                                 )}
                             />

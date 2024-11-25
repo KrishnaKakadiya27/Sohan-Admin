@@ -165,10 +165,10 @@ const ViewPersonMaster = () => {
                 defaultValue=""
                 rules={{ required: 'Address is required' }}
                 render={({ field }) => (
-                  <input
+                  <textarea
                     {...field}
                     type="text"
-                    className="mt-1 block w-full rounded-md shadow-sm p-3"
+                    className="mt-1 min-h-[200px] block w-full rounded-md shadow-sm p-3"
                     placeholder="Address"
                     value={personData?.address}
                   />
@@ -189,18 +189,15 @@ const ViewPersonMaster = () => {
                   <select
                     {...field}
                     name="role"
-                    // value={formValues.gender}
-                    // onChange={handleChange}
                     className="mt-1 block w-full rounded-md shadow-sm p-3"
-                    // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
                     required
                     defaultValue={"Select Role"}
                     value={personData?.role}
                     disabled
                   >
-                    <option disabled value="Select Role">Select Category</option>
-                    <option value="Male">SuperAdmin</option>
-                    <option value="Female">Admin</option>
+                    <option disabled value="Select Role">Select Role</option>
+                    <option value="SuperAdmin">SuperAdmin</option>
+                    <option value="Admin">Admin</option>
                   </select>
                 )}
               />
@@ -220,15 +217,14 @@ const ViewPersonMaster = () => {
                     {...field}
                     name="category"
                     className="mt-1 block w-full rounded-md shadow-sm p-3"
-                    // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
                     required
                     defaultValue={"Select Category"}
                     value={personData?.category}
                     disabled
                   >
                     <option value="Select Category" disabled>Select Category</option>
-                    <option value="Male">Main Category</option>
-                    <option value="Female">Sub Category</option>
+                    <option value="MAIN USER">MAIN USER</option>
+                    <option value="SUB USER">SUB USER</option>
                   </select>
                 )}
               />
@@ -285,7 +281,7 @@ const ViewPersonMaster = () => {
               {errors.country && <p className="text-red-500 mt-1">{errors.country?.message}</p>}
             </Grid>
 
-           
+
 
             <Grid item xs={12} md={6}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
@@ -331,7 +327,7 @@ const ViewPersonMaster = () => {
               {errors.city && <p className="text-red-500 mt-1">{errors.city?.message}</p>}
             </Grid>
 
-            
+
           </Grid>
 
           <Box

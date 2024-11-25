@@ -75,7 +75,7 @@ const EditPersonMaster = () => {
 
     useEffect(() => {
         if (personMasterData) {
-            console.log("personMasterData?.category",personMasterData?.role)
+            console.log("personMasterData?.category", personMasterData?.role)
             setValue("name", personMasterData?.name);
             setValue("mobileNumber", personMasterData?.mobile_number);
             setValue("email", personMasterData?.email);
@@ -235,10 +235,7 @@ const EditPersonMaster = () => {
                                     <select
                                         {...field}
                                         name="role"
-                                        // value={formValues.gender}
-                                        // onChange={handleChange}
                                         className="mt-1 block w-full rounded-md shadow-sm p-3"
-                                        // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
                                         required
                                         defaultValue={"Select Role"}
                                         value={field.value || "Select Role"} // Set the selected value
@@ -266,7 +263,6 @@ const EditPersonMaster = () => {
                                         {...field}
                                         name="category"
                                         className="mt-1 block w-full rounded-md shadow-sm p-3"
-                                        // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
                                         required
                                         defaultValue={"Select Category"}
                                         value={field.value || "Select Category"} // Set the selected value
