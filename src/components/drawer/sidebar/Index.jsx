@@ -215,7 +215,7 @@ export default function SidebarList() {
 
 
       {/* raw material Master */}
-      {role === "SuperAdmin" && <ListItemButton
+      {role === "superadmin" && <ListItemButton
         sx={{
           py: "12px",
           "&:hover": { color: "#E17A21" },
@@ -232,7 +232,7 @@ export default function SidebarList() {
 
 
       {/* Item Master */}
-      {role === "SuperAdmin" && <ListItemButton
+      {role === "superadmin" && <ListItemButton
         sx={{
           py: "12px",
           "&:hover": { color: "#E17A21" },
