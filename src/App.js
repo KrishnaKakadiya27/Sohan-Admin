@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 import { setLoggedIn, setToken } from './redux/slices/authSlice';
 import Router from './routes';
-import { Toaster } from 'react-hot-toast';
 
 
 function App() {

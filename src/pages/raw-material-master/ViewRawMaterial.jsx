@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { useTheme } from "@mui/material/styles";
-import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Button, Card, CardContent, Grid, Typography, useMediaQuery } from '@mui/material';
-import { Controller, useForm } from 'react-hook-form';
-import axiosInstance from '../../axiosInstance';
+import { useTheme } from "@mui/material/styles";
 import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { useNavigate, useParams } from 'react-router-dom';
+import axiosInstance from '../../axiosInstance';
 
 
 const ViewRawMaterial = () => {
@@ -16,16 +16,14 @@ const ViewRawMaterial = () => {
 
     // useForm setup with validation rules
     const {
-        control,
-        handleSubmit,
-        formState: { errors },
-        reset
+        control
     } = useForm({
         mode: 'onSubmit', // Trigger validation on form submit
     });
 
     useEffect(() => {
         getOperatorDataById();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const getOperatorDataById = async () => {

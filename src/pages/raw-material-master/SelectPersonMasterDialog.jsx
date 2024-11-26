@@ -58,6 +58,7 @@ const SelectPersonMasterDialog = ({ open, setPersonId, setOpen, personIdName, se
       setPage(1);
       fetchCategories(1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, searchTerm]);
 
   // Fetch more data when scrolling

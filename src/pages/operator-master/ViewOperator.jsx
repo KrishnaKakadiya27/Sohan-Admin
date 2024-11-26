@@ -16,15 +16,14 @@ const AddOperator = () => {
     // useForm setup with validation rules
     const {
         control,
-        handleSubmit,
         formState: { errors },
-        reset
     } = useForm({
         mode: 'onSubmit', // Trigger validation on form submit
     });
 
     useEffect(() => {
         getOperatorDataById();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const getOperatorDataById = async () => {
@@ -42,7 +41,7 @@ const AddOperator = () => {
     return (
         <div className="bg-white py-4 px-[20px] sm:px-[70px]">
             <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-semibold">View Operator Details</h1>
+                <h1 className="text-2xl font-semibold">View Operator Master Details</h1>
             </div>
             <Box
                 display="flex"

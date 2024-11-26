@@ -9,20 +9,12 @@ import EntriesSelector from "../../components/common/EntriesSelector";
 import Pagination from "../../components/common/Pagination";
 import SearchBar from "../../components/common/SearchBar";
 import TableLayoutBox from "../../components/common/TableLayoutBox";
-import useWindowWidth from "../../customHooks/useWindowWidth";
 import DeleteOperator from './DeleteOperator';
-import { useSelector } from "react-redux";
 
 const OperatorMaster = () => {
-  const windowWidth = useWindowWidth();
-  const token = localStorage.getItem("token")
-  const newToken = JSON.parse(token)
   const navigate = useNavigate();
-  const drawerValueFlag = useSelector((state) => state.auth)
-  console.log("drawerValueFlag",drawerValueFlag?.isOpen)
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
-  const [checked, setChecked] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [operatorData, setOperatorData] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
@@ -31,10 +23,6 @@ const OperatorMaster = () => {
   const handleEntriesChange = (event) => {
     setEntries(event.target.value);
     setCurrentPage(1);
-  };
-
-  const handleChangeSwitch = () => {
-    setChecked((prev) => !prev);
   };
 
   const handleSearch = (term) => {
@@ -48,6 +36,7 @@ const OperatorMaster = () => {
 
   useEffect(() => {
     getListData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, entries, searchTerm])
 
   const getListData = async () => {
@@ -105,113 +94,113 @@ const OperatorMaster = () => {
       </div>
 
       <TableLayoutBox>
-           <table className="!w-full bg-white rounded-[8px] overflow-visible ">
-            <thead className="bg-[#F6F6F6] border border-[#F6F6F6]">
+        <table className="!w-full bg-white rounded-[8px] overflow-visible ">
+          <thead className="bg-[#F6F6F6] border border-[#F6F6F6]">
+            <tr>
+              <th className="py-[15px] px-4 text-[#454545] font-medium">
+                Id
+              </th>
+              <th className="py-[15px] px-4 text-[#454545] font-medium text-left">
+                Name
+              </th>
+              <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
+                Mobile Number
+              </th>
+              <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
+                Aadhar Card Number
+              </th>
+              <th className="py-[15px] px-4 text-[#454545] font-medium text-left">
+                State
+              </th>
+              <th className="py-[15px] px-4 text-[#454545] font-medium text-left">
+                City
+              </th>
+              <th className="py-[15px] px-4 text-[#454545] font-medium text-left">
+                Country
+              </th>
+              {/* <th className="py-2 px-4 text-[#454545] font-medium">Status</th> */}
+              <th className="py-2 px-[150px] text-[#454545] font-medium">Action</th>
+            </tr>
+          </thead>
+          <tbody className="border">
+            {isLoading && operatorData?.length === 0 ?
               <tr>
-                <th className="py-[15px] px-4 text-[#454545] font-medium">
-                  Id
-                </th>
-                <th className="py-[15px] px-4 text-[#454545] font-medium text-left">
-                  Name
-                </th>
-                <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
-                  Mobile Number
-                </th>
-                <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
-                  Aadhar Card Number
-                </th>
-                <th className="py-[15px] px-4 text-[#454545] font-medium text-left">
-                  State
-                </th> 
-                <th className="py-[15px] px-4 text-[#454545] font-medium text-left">
-                  City
-                </th>
-                <th className="py-[15px] px-4 text-[#454545] font-medium text-left">
-                  Country
-                </th>
-                {/* <th className="py-2 px-4 text-[#454545] font-medium">Status</th> */}
-                <th className="py-2 px-[150px] text-[#454545] font-medium">Action</th>
+                <td colSpan={12} className="py-2 px-4  text-center">
+                  <CircularProgress />
+                </td>
               </tr>
-            </thead>
-            <tbody className="border">
-              {isLoading && operatorData?.length === 0 ?
-                <tr>
-                  <td colSpan={12} className="py-2 px-4  text-center">
-                    <CircularProgress />
-                  </td>
-                </tr>
-                : (operatorData?.length > 0 ? operatorData?.map((item, index) => (
-                  <tr key={index}>
+              : (operatorData?.length > 0 ? operatorData?.map((item, index) => (
+                <tr key={index}>
 
-                    <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
-                      {item?.operator_master_id}
-                    </td>
-                    <td className="py-2 border-[1px] border-[#D0D0D0] min-w-[200px]  px-4 border-b">
-                      {item?.name}
-                    </td>
-                    <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                      {item?.mobile_number}
-                    </td>
-                    <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                      {item?.adhar_card_number}
-                    </td>
-                    <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                      {item?.state ?? "-"}
-                    </td>
-                    <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                      {item?.city ?? "-"}
-                    </td>
-                    <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                      {item?.country ?? "-"}
-                    </td>
-                    {/* <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
+                  <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
+                    {item?.operator_master_id}
+                  </td>
+                  <td className="py-2 border-[1px] border-[#D0D0D0] min-w-[200px]  px-4 border-b">
+                    {item?.name}
+                  </td>
+                  <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                    {item?.mobile_number}
+                  </td>
+                  <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                    {item?.adhar_card_number}
+                  </td>
+                  <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                    {item?.state ?? "-"}
+                  </td>
+                  <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                    {item?.city ?? "-"}
+                  </td>
+                  <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                    {item?.country ?? "-"}
+                  </td>
+                  {/* <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
                   <CustomSwitch
                     checked={checked}
                     onChange={handleChangeSwitch}
                   />
                 </td> */}
-                    <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: "10px",
-                        }}
-                      >
-                        {/* View Button */}
-                        <ActionButton
-                          icon={<VisibilityIcon />}
-                          label="View"
-                          color="#3f3f3f"
-                          onClick={() => navigate(`/operator-master/view/${item?.uuid}`)}
-                        />
+                  <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "10px",
+                      }}
+                    >
+                      {/* View Button */}
+                      <ActionButton
+                        icon={<VisibilityIcon />}
+                        label="View"
+                        color="#3f3f3f"
+                        onClick={() => navigate(`/operator-master/view/${item?.uuid}`)}
+                      />
 
-                        {/* Edit Button */}
-                        <ActionButton
-                          icon={<EditIcon />}
-                          label="Edit"
-                          color="#1976d2"
-                          onClick={() => navigate(`/operator-master/edit/${item?.uuid}`)}
-                        />
+                      {/* Edit Button */}
+                      <ActionButton
+                        icon={<EditIcon />}
+                        label="Edit"
+                        color="#1976d2"
+                        onClick={() => navigate(`/operator-master/edit/${item?.uuid}`)}
+                      />
 
-                        {/* Delete Button */}
-                        <DeleteOperator id={item?.uuid} getListData={getListData} />
-                      </div>
-                    </td>
-                  </tr>
-                ))
-                  :
-                  <tr>
-                    <td colSpan={8} className="py-2 px-4  text-center text-nowrap">
-                      No Operator Master Data Found
-                    </td>
-                  </tr>)
-              }
+                      {/* Delete Button */}
+                      <DeleteOperator id={item?.uuid} getListData={getListData} />
+                    </div>
+                  </td>
+                </tr>
+              ))
+                :
+                <tr>
+                  <td colSpan={8} className="py-2 px-4  text-center text-nowrap">
+                    No Operator Master Data Found
+                  </td>
+                </tr>)
+            }
 
-            </tbody>
-          </table>
-       </TableLayoutBox>
+          </tbody>
+        </table>
+      </TableLayoutBox>
 
       <Pagination
         currentPage={currentPage}

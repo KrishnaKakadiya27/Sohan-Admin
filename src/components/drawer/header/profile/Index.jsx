@@ -1,17 +1,16 @@
+import { Avatar } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { alpha, styled } from "@mui/material/styles";
 import * as React from "react";
+import toast, { Toaster } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { ReactComponent as DropdownArrow } from "../../../../assets/icons/dropdownArrow.svg";
 import { ReactComponent as ProfileIcon } from "../../../../assets/icons/profileIcon.svg";
 import { ReactComponent as SettingIcon } from "../../../../assets/icons/settingIcon.svg";
 import { ReactComponent as SignOutIcon } from "../../../../assets/icons/signOutIcon.svg";
-import ProfilePic from "../../../../assets/images/profilePic.png";
-import { useNavigate } from "react-router-dom";
 import { setLoggedIn } from "../../../../redux/slices/authSlice";
-import { useDispatch } from "react-redux";
-import toast, { Toaster } from "react-hot-toast";
-import { Avatar } from "@mui/material";
 
 const StyledMenu = styled((props) => (
   <Menu

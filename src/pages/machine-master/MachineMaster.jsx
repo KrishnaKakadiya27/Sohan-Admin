@@ -1,26 +1,21 @@
-import React, { useEffect, useState } from 'react'
-import useWindowWidth from '../../customHooks/useWindowWidth';
-import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../../axiosInstance';
-import EntriesSelector from '../../components/common/EntriesSelector';
-import SearchBar from '../../components/common/SearchBar';
-import { Button, CircularProgress } from '@mui/material';
-import TableLayoutBox from '../../components/common/TableLayoutBox';
-import ActionButton from '../../components/common/ActionButton';
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import DeleteMachineMaster from './DeleteMachineMaster';
+import { Button, CircularProgress } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../axiosInstance';
+import ActionButton from '../../components/common/ActionButton';
+import EntriesSelector from '../../components/common/EntriesSelector';
 import Pagination from '../../components/common/Pagination';
+import SearchBar from '../../components/common/SearchBar';
+import TableLayoutBox from '../../components/common/TableLayoutBox';
+import DeleteMachineMaster from './DeleteMachineMaster';
 
 const MachineMaster = () => {
-  const windowWidth = useWindowWidth();
-  const token = localStorage.getItem("token")
-  const newToken = JSON.parse(token)
   const navigate = useNavigate();
 
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
-  const [checked, setChecked] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [machineData, setMachineData] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
@@ -43,6 +38,7 @@ const MachineMaster = () => {
 
   useEffect(() => {
     getListData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, entries, searchTerm])
 
   const getListData = async () => {
@@ -99,105 +95,105 @@ const MachineMaster = () => {
 
       <TableLayoutBox>
         {/* <div className="!max-w-[300px]"> */}
-          <table className="w-full bg-white rounded-[8px] ">
-            <thead className="bg-[#F6F6F6] border border-[#F6F6F6]">
+        <table className="w-full bg-white rounded-[8px] ">
+          <thead className="bg-[#F6F6F6] border border-[#F6F6F6]">
+            <tr>
+              <th className="py-[15px] px-4 text-[#454545] font-medium">
+                Id
+              </th>
+              <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
+                Person Master Name
+              </th>
+              <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
+                Category Name
+              </th>
+              <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
+                Sub Category Name
+              </th>
+              <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
+                Machine Number
+              </th>
+              <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
+                Dry Production Per Hr
+              </th>
+              <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
+                Require Space for Machine
+              </th>
+              <th className="py-2 px-4 text-[#454545] font-medium">Action</th>
+            </tr>
+          </thead>
+          <tbody className="border">
+            {isLoading && machineData?.length === 0 ?
               <tr>
-                <th className="py-[15px] px-4 text-[#454545] font-medium">
-                  Id
-                </th>
-                <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
-                  Person Master Name
-                </th>
-                <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
-                  Category Name
-                </th>
-                <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
-                  Sub Category Name
-                </th>
-                <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
-                  Machine Number
-                </th>
-                <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
-                  Dry Production Per Hr
-                </th>
-                <th className="py-[15px] px-4 text-nowrap text-[#454545] font-medium text-left">
-                  Require Space for Machine
-                </th>
-                <th className="py-2 px-4 text-[#454545] font-medium">Action</th>
+                <td colSpan={12} className="py-2 px-4  text-center">
+                  <CircularProgress />
+                </td>
               </tr>
-            </thead>
-            <tbody className="border">
-              {isLoading && machineData?.length === 0 ?
-                <tr>
-                  <td colSpan={12} className="py-2 px-4  text-center">
-                    <CircularProgress />
+              : (machineData?.length > 0 ? machineData?.map((item, index) => (
+                <tr key={index}>
+
+                  <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
+                    {item?.machine_master_id}
+                  </td>
+                  <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                    {item?.personMasterDetailes?.name}
+                  </td>
+                  <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                    {item?.categoryMasterDetail?.name}
+                  </td>
+                  <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                    {item?.subCategoryMasterDetail?.name}
+                  </td>
+                  <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                    {item?.machine_number}
+                  </td>
+                  <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                    {item?.dry_production_per_hours}
+                  </td>
+                  <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                    {item?.require_space_for_machine}
+                  </td>
+                  <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "10px",
+                      }}
+                    >
+                      {/* View Button */}
+                      <ActionButton
+                        icon={<VisibilityIcon />}
+                        label="View"
+                        color="#3f3f3f"
+                        onClick={() => navigate(`/machine-master/view/${item?.uuid}`)}
+                      />
+
+                      {/* Edit Button */}
+                      <ActionButton
+                        icon={<EditIcon />}
+                        label="Edit"
+                        color="#1976d2"
+                        onClick={() => navigate(`/machine-master/edit/${item?.uuid}`)}
+                      />
+
+                      {/* Delete Button */}
+                      <DeleteMachineMaster id={item?.uuid} getListData={getListData} />
+                    </div>
                   </td>
                 </tr>
-                : (machineData?.length > 0 ? machineData?.map((item, index) => (
-                  <tr key={index}>
+              ))
+                :
+                <tr>
+                  <td colSpan={8} className="py-2 px-4  text-center text-nowrap">
+                    No Machine Data Found
+                  </td>
+                </tr>)
+            }
 
-                    <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
-                      {item?.machine_master_id}
-                    </td>
-                    <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                      {item?.personMasterDetailes?.name}
-                    </td>
-                    <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                      {item?.categoryMasterDetail?.name}
-                    </td>
-                    <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                      {item?.subCategoryMasterDetail?.name}
-                    </td>
-                    <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                      {item?.machine_number}
-                    </td>
-                    <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                      {item?.dry_production_per_hours}
-                    </td>
-                    <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                      {item?.require_space_for_machine}
-                    </td>
-                    <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: "10px",
-                        }}
-                      >
-                        {/* View Button */}
-                        <ActionButton
-                          icon={<VisibilityIcon />}
-                          label="View"
-                          color="#3f3f3f"
-                          onClick={() => navigate(`/machine-master/view/${item?.uuid}`)}
-                        />
-
-                        {/* Edit Button */}
-                        <ActionButton
-                          icon={<EditIcon />}
-                          label="Edit"
-                          color="#1976d2"
-                          onClick={() => navigate(`/machine-master/edit/${item?.uuid}`)}
-                        />
-
-                        {/* Delete Button */}
-                        <DeleteMachineMaster id={item?.uuid} getListData={getListData} />
-                      </div>
-                    </td>
-                  </tr>
-                ))
-                  :
-                  <tr>
-                    <td colSpan={8} className="py-2 px-4  text-center text-nowrap">
-                      No Machine Data Found
-                    </td>
-                  </tr>)
-              }
-
-            </tbody>
-          </table>
+          </tbody>
+        </table>
         {/* </div> */}
       </TableLayoutBox>
 

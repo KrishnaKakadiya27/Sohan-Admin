@@ -1,5 +1,4 @@
 import { Button, CircularProgress } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
@@ -15,7 +14,6 @@ import EditCategory from "./EditCategory";
 
 
 const Category = () => {
-  const theme = useTheme();
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -77,6 +75,7 @@ const Category = () => {
 
   useEffect(() => {
     getCategoryData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, entries, searchTerm])
 
   const getCategoryData = async () => {

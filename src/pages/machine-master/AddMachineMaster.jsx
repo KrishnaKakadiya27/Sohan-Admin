@@ -47,7 +47,6 @@ const AddMachineMaster = () => {
         setValue,
         handleSubmit,
         formState: { errors },
-        reset
     } = useForm({
         mode: 'onSubmit', // Trigger validation on form submit
     });
@@ -164,7 +163,6 @@ const AddMachineMaster = () => {
                                             setOpen={setDialogOpen}
                                             setSelectCatFlag={setSelectCatFlag}
                                             setCatId={(id) => {
-                                                // setValue("cat_id", id,id);
                                                 setCatIdName(id?.name)
                                                 setValue("cat_id", id, { shouldValidate: true });
                                                 setCatId({ id: id?.id, uuid: id?.uuid, name: id?.name });

@@ -2,7 +2,6 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import * as React from "react";
 import { ReactComponent as MenuIcon } from "../../../assets/icons/menuIcon.svg";
-import { ReactComponent as NotificationIcon } from "../../../assets/icons/notificationIcon.svg";
 import Profile from "./profile/Index";
 
 const Header = ({ handleDrawerOpen }) => {

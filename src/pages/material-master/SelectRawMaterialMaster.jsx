@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { CircularProgress, List, ListItem } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import axiosInstance from '../../axiosInstance';
 import SearchBar from '../../components/common/SearchBar';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { CircularProgress, List, ListItem } from '@mui/material';
 
 const SelectRawMaterialMaster = ({ open, setRawMaterialId, setOpen, rawMaterialIdName }) => {
 
@@ -59,6 +59,7 @@ const SelectRawMaterialMaster = ({ open, setRawMaterialId, setOpen, rawMaterialI
             setPage(1);
             fetchCategories(1);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open, searchTerm]);
 
     // Fetch more data when scrolling

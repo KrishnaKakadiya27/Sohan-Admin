@@ -1,20 +1,17 @@
-import * as React from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import ActionButton from "../../components/common/ActionButton";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useDispatch } from "react-redux";
-import { deleteCategory } from "../../redux/slices/categorySlice"; // Import your deleteCategory thunk
-import axiosInstance from "../../axiosInstance";
+import * as React from "react";
 import toast, { Toaster } from "react-hot-toast";
+import axiosInstance from "../../axiosInstance";
+import ActionButton from "../../components/common/ActionButton";
 
 const DeletePersonMaster = ({id,getListData}) => {
     const [open, setOpen] = React.useState(false);
-    const dispatch = useDispatch();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -55,7 +52,7 @@ const DeletePersonMaster = ({id,getListData}) => {
                 <DialogTitle id="alert-dialog-title">{"Delete Person Master"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Are you sure you want to delete this operator? This action cannot be
+                        Are you sure you want to delete this person master? This action cannot be
                         undone.
                     </DialogContentText>
                 </DialogContent>

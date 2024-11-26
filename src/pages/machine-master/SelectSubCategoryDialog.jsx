@@ -62,6 +62,7 @@ const SelectSubCategoryDialog = ({ catIdName, open, setOpen, setSubCatId, catId,
             setPage(1);
             fetchCategories(1);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open, searchTerm, catId]);
 
     // Fetch more data when scrolling

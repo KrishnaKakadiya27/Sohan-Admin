@@ -2,9 +2,9 @@ import { Box, Button, Grid, useMediaQuery } from '@mui/material';
 import { useTheme } from "@mui/material/styles";
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
-import toast, { Toaster } from 'react-hot-toast';
 
 const AddOperator = () => {
     const theme = useTheme();
@@ -53,9 +53,10 @@ const AddOperator = () => {
         }
         // Perform form submission actions here
     };
-    
+
     useEffect(() => {
         getOperatorDataById();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
 

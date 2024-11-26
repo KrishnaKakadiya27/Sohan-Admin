@@ -20,21 +20,17 @@ const EditSubCategory = ({ id, getCategoryData }) => {
     const [catIdName, setCatIdName] = useState("");
     const [catId, setCatId] = useState("");
     const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectCatFlag, setSelectCatFlag] = useState(false)
-
-
+    const [selectCatFlag, setSelectCatFlag] = useState(false)
+    
     const handleOpenDialog = () => {
         setDialogOpen(!dialogOpen);
     }
-
-
 
     const {
         control,
         setValue,
         handleSubmit,
         formState: { errors },
-        reset
     } = useForm({
         mode: 'onSubmit', // Trigger validation on form submit
     });

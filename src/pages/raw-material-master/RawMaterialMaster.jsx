@@ -1,27 +1,21 @@
-import React, { useEffect, useState } from 'react'
-import EntriesSelector from '../../components/common/EntriesSelector'
-import SearchBar from '../../components/common/SearchBar'
+import EditIcon from "@mui/icons-material/Edit"
+import VisibilityIcon from "@mui/icons-material/Visibility"
 import { Button, CircularProgress } from '@mui/material'
-import TableLayoutBox from '../../components/common/TableLayoutBox'
-import ActionButton from '../../components/common/ActionButton'
-import DeleteOperator from '../operator-master/DeleteOperator'
-import Pagination from '../../components/common/Pagination'
-import useWindowWidth from '../../customHooks/useWindowWidth'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../axiosInstance'
-import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import ActionButton from '../../components/common/ActionButton'
+import EntriesSelector from '../../components/common/EntriesSelector'
+import Pagination from '../../components/common/Pagination'
+import SearchBar from '../../components/common/SearchBar'
+import TableLayoutBox from '../../components/common/TableLayoutBox'
 import DeleteRawMaterial from './DeleteRawMaterial'
 
 const RawMaterialMaster = () => {
-  const windowWidth = useWindowWidth();
-  const token = localStorage.getItem("token")
-  const newToken = JSON.parse(token)
   const navigate = useNavigate();
 
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
-  const [checked, setChecked] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [rawMaterialData, setRawMaterialData] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
@@ -31,10 +25,6 @@ const RawMaterialMaster = () => {
   const handleEntriesChange = (event) => {
     setEntries(event.target.value);
     setCurrentPage(1);
-  };
-
-  const handleChangeSwitch = () => {
-    setChecked((prev) => !prev);
   };
 
   const handleSearch = (term) => {
@@ -48,6 +38,7 @@ const RawMaterialMaster = () => {
 
   useEffect(() => {
     getListData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, entries, searchTerm])
 
   const getListData = async () => {

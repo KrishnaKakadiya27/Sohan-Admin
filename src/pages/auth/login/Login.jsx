@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
-import BannerImg from "../../../assets/images/BImg.png";
-import Logo from "../../../assets/images/logo.svg";
-import { ReactComponent as InfoLogo } from "../../../assets/icons/info.svg";
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { setLoggedIn, setRole, setToken } from '../../../redux/slices/authSlice';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import Logo from "../../../assets/images/logo.svg";
+import { setLoggedIn, setRole, setToken } from '../../../redux/slices/authSlice';
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -45,7 +43,7 @@ const Login = () => {
                 <div className="max-w-md w-full">
                     <div className="text-center flex justify-center mb-6">
                         {/* Logo */}
-                        <img src={Logo} style={{ width: "200px", height: "170px" }} />
+                        <img src={Logo} style={{ width: "200px", height: "170px" }} alt='logo' />
                     </div>
 
                     <h2 className="text-2xl font-bold text-center text-[#D3A99C] mb-4">Log in</h2>

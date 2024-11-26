@@ -1,26 +1,21 @@
-import React, { useEffect, useState } from 'react'
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import useWindowWidth from '../../customHooks/useWindowWidth';
+import { Button, CircularProgress } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
-import EntriesSelector from '../../components/common/EntriesSelector';
-import SearchBar from '../../components/common/SearchBar';
-import { Button, CircularProgress } from '@mui/material';
-import TableLayoutBox from '../../components/common/TableLayoutBox';
 import ActionButton from '../../components/common/ActionButton';
-import DeleteMaterialMaster from './DeleteMaterialMaster';
+import EntriesSelector from '../../components/common/EntriesSelector';
 import Pagination from '../../components/common/Pagination';
+import SearchBar from '../../components/common/SearchBar';
+import TableLayoutBox from '../../components/common/TableLayoutBox';
+import DeleteMaterialMaster from './DeleteMaterialMaster';
 
 const MaterialMaster = () => {
-  const windowWidth = useWindowWidth();
-  const token = localStorage.getItem("token")
-  const newToken = JSON.parse(token)
   const navigate = useNavigate();
 
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
-  const [checked, setChecked] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [materialData, setMaterialData] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
@@ -43,6 +38,7 @@ const MaterialMaster = () => {
 
   useEffect(() => {
     getListData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, entries, searchTerm])
 
   const getListData = async () => {

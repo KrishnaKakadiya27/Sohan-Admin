@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import { useTheme } from "@mui/material/styles";
-import { useNavigate, useParams } from 'react-router-dom';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box, Button, Grid, useMediaQuery } from '@mui/material';
+import { useTheme } from "@mui/material/styles";
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
+import CustomSwitch from '../../components/common/CustomSwitch';
 import SelectPersonMasterDialog from '../raw-material-master/SelectPersonMasterDialog';
 import SelectRawMaterialMaster from './SelectRawMaterialMaster';
-import CustomSwitch from '../../components/common/CustomSwitch';
-import toast, { Toaster } from 'react-hot-toast';
 
 
 const EditMaterialMaster = () => {
@@ -77,6 +77,7 @@ const EditMaterialMaster = () => {
 
   useEffect(() => {
     getMaterialDataById();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 

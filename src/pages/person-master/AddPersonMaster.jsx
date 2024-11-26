@@ -13,7 +13,6 @@ const AddPersonMaster = () => {
         control,
         handleSubmit,
         formState: { errors },
-        reset
     } = useForm({
         mode: 'onSubmit', // Trigger validation on form submit
     });

@@ -6,8 +6,8 @@ import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import SelectPersonMasterDialog from './SelectPersonMasterDialog';
 import axiosInstance from '../../axiosInstance';
+import SelectPersonMasterDialog from './SelectPersonMasterDialog';
 
 
 const AddRawMaterial = () => {
@@ -28,7 +28,6 @@ const AddRawMaterial = () => {
         setValue,
         handleSubmit,
         formState: { errors },
-        reset
     } = useForm({
         mode: 'onSubmit', // Trigger validation on form submit
     });

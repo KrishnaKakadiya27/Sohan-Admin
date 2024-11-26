@@ -1,33 +1,21 @@
-import { Button, CircularProgress, useMediaQuery } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Button, CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../../axiosInstance";
 import CustomSwitch from "../../../components/common/CustomSwitch";
 import EntriesSelector from "../../../components/common/EntriesSelector";
 import Pagination from "../../../components/common/Pagination";
 import SearchBar from "../../../components/common/SearchBar";
 import TableLayoutBox from "../../../components/common/TableLayoutBox";
-import { selectCategories, selectLoading, selectNoData } from "../../../redux/slices/categorySlice";
 import AddSubCategory from "./AddSubCategory";
 import DeleteSubCategory from "./DeleteSubCategory";
 import EditSubCategory from "./EditSubCategory";
 
 
 const SubCategory = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const categories = useSelector(selectCategories);
-  const loading = useSelector(selectLoading);
-  const noData = useSelector(selectNoData);
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
-  const [checked, setChecked] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
   const [subCategoryData, setSubCategoryData] = useState([]);
@@ -89,6 +77,7 @@ const SubCategory = () => {
 
   useEffect(() => {
     getCategoryData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, entries, searchTerm])
 
   const getCategoryData = async () => {

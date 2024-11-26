@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { useTheme } from "@mui/material/styles";
-import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, Card, CardContent, Grid, Typography, useMediaQuery } from '@mui/material';
-import { Controller, useForm } from 'react-hook-form';
-import axiosInstance from '../../axiosInstance';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Box, Button, Card, CardContent, Grid, Typography, useMediaQuery } from '@mui/material';
+import { useTheme } from "@mui/material/styles";
 import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { Toaster } from 'react-hot-toast';
+import { useNavigate, useParams } from 'react-router-dom';
+import axiosInstance from '../../axiosInstance';
 import CustomSwitch from '../../components/common/CustomSwitch';
 
 
@@ -17,45 +16,18 @@ const ViewMaterialMaster = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const UId = useParams();
   const [materialData, setMaterialData] = useState([])
-  const [personIdName, setPersonIdName] = useState("");
-  const [perosnId, setPersonId] = useState("");
-  const [dialogOpenPerson, setDialogOpenPerson] = useState(false);
-  const [catIdName, setCatIdName] = useState("");
-  const [catId, setCatId] = useState("");
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [subCatIdName, setSubCatIdName] = useState("");
-  const [subCatId, setSubCatId] = useState("");
-  const [dialogOpenSub, setDialogOpenSub] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [categoryId, setCategoryId] = useState(catId?.id);
-  const [rawMaterialIdName, setRawMaterialIdName] = useState("");
-  const [rawMaterialId, setRawMaterialId] = useState("");
-  const [dialogOpenRaw, setDialogOpenRaw] = useState(false);
 
-  const handleOpenDialogPerson = () => {
-    setDialogOpenPerson(!dialogOpenPerson);
-    setSearchTerm("");
-  }
-
-  const handleOpenDialog = () => {
-    setDialogOpen(!dialogOpen);
-  }
-  const handleOpenDialogSub = () => {
-    setDialogOpenSub(!dialogOpenSub);
-  }
   // useForm setup with validation rules
   const {
     control,
-    handleSubmit,
     formState: { errors },
-    reset,
-    setValue
   } = useForm({
     mode: 'onSubmit', // Trigger validation on form submit
   });
 
   useEffect(() => {
     getMaterialDataById();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const getMaterialDataById = async () => {
@@ -84,7 +56,6 @@ const ViewMaterialMaster = () => {
 
         <Box
           component="form"
-          // onSubmit={handleSubmit(onSubmit)}
           display="flex"
           flexDirection="column"
           flex={1}
@@ -109,13 +80,11 @@ const ViewMaterialMaster = () => {
                   <div className="relative">
                     <div
                       className="mt-1 w-full rounded-md p-3 relative flex shadow-sm justify-between cursor-pointer"
-                      // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-                      // onClick={handleOpenDialogPerson}
                     >
                       <p>{materialData?.personMasterDetailes?.name}</p>
-                      {dialogOpenPerson ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                      <ExpandMoreIcon />
                     </div>
-                   
+
                   </div>
                 )}
               />
@@ -132,11 +101,9 @@ const ViewMaterialMaster = () => {
                   <div className="relative">
                     <div
                       className="mt-1 w-full rounded-md p-3 relative flex shadow-sm justify-between cursor-pointer"
-                      // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-                      // onClick={handleOpenDialogRaw}
                     >
                       <p>{materialData?.rawMaterialMasterDetail?.name}</p>
-                      {dialogOpenRaw ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                      <ExpandMoreIcon />
                     </div>
                   </div>
                 )}
@@ -275,7 +242,7 @@ const ViewMaterialMaster = () => {
               sx={{
                 background: "#454545",
                 color: "#ffffff",
-            }}
+              }}
               onClick={() => navigate("/item-master")}
             >
               Back

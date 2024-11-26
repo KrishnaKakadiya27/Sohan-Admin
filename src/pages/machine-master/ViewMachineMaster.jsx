@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import { useTheme } from "@mui/material/styles";
-import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, Card, CardContent, Grid, Typography, useMediaQuery } from '@mui/material';
-import { Controller, useForm } from 'react-hook-form';
-import axiosInstance from '../../axiosInstance';
-import SelectPersonMasterDialog from '../raw-material-master/SelectPersonMasterDialog';
-import SelectCategoryDialog from '../category/subCategory/SelectCategoryDialog';
-import SelectSubCategoryDialog from './SelectSubCategoryDialog';
-import CustomSwitch from '../../components/common/CustomSwitch';
-import { Toaster } from 'react-hot-toast';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Box, Button, Card, CardContent, Grid, Typography, useMediaQuery } from '@mui/material';
+import { useTheme } from "@mui/material/styles";
 import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { Toaster } from 'react-hot-toast';
+import { useNavigate, useParams } from 'react-router-dom';
+import axiosInstance from '../../axiosInstance';
+import CustomSwitch from '../../components/common/CustomSwitch';
 
 const ViewMachineMaster = () => {
     const theme = useTheme();
@@ -19,43 +15,17 @@ const ViewMachineMaster = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
     const UId = useParams();
     const [machineData, setMachineData] = useState([])
-    const [personIdName, setPersonIdName] = useState("");
-    const [perosnId, setPersonId] = useState("");
-    const [dialogOpenPerson, setDialogOpenPerson] = useState(false);
-    const [catIdName, setCatIdName] = useState("");
-    const [catId, setCatId] = useState("");
-    const [dialogOpen, setDialogOpen] = useState(false);
-    const [subCatIdName, setSubCatIdName] = useState("");
-    const [subCatId, setSubCatId] = useState("");
-    const [dialogOpenSub, setDialogOpenSub] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [categoryId, setCategoryId] = useState(catId?.id);
 
-
-    const handleOpenDialogPerson = () => {
-        setDialogOpenPerson(!dialogOpenPerson);
-        setSearchTerm("");
-    }
-
-    const handleOpenDialog = () => {
-        setDialogOpen(!dialogOpen);
-    }
-    const handleOpenDialogSub = () => {
-        setDialogOpenSub(!dialogOpenSub);
-    }
     // useForm setup with validation rules
     const {
-        control,
-        handleSubmit,
-        formState: { errors },
-        reset,
-        setValue
+        control
     } = useForm({
         mode: 'onSubmit', // Trigger validation on form submit
     });
 
     useEffect(() => {
         getMachineDataById();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const getMachineDataById = async () => {
@@ -72,7 +42,7 @@ const ViewMachineMaster = () => {
     return (
         <div className="bg-white py-4 px-[20px] sm:px-[70px]">
             <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-semibold">Machine Master</h1>
+                <h1 className="text-2xl font-semibold">View Machine Master Details</h1>
             </div>
             <Box
                 display="flex"
@@ -84,7 +54,6 @@ const ViewMachineMaster = () => {
 
                 <Box
                     component="form"
-                    // onSubmit={handleSubmit(onSubmit)}
                     display="flex"
                     flexDirection="column"
                     flex={1}
@@ -109,11 +78,9 @@ const ViewMachineMaster = () => {
                                     <div className="relative">
                                         <div
                                             className="mt-1 w-full rounded-md p-3 relative flex shadow-sm justify-between cursor-pointer"
-                                        // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-                                        // onClick={handleOpenDialogPerson}
                                         >
                                             <p>{machineData?.personMasterDetailes?.name}</p>
-                                            {dialogOpenPerson ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                            <ExpandMoreIcon />
                                         </div>
 
                                     </div>
@@ -133,11 +100,9 @@ const ViewMachineMaster = () => {
                                     <div className="relative">
                                         <div
                                             className="mt-1 w-full rounded-md p-3 shadow-sm relative flex justify-between cursor-pointer"
-                                        // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-                                        // onClick={handleOpenDialog}
                                         >
                                             <p>{machineData?.categoryMasterDetail?.name}</p>
-                                            {dialogOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                             <ExpandMoreIcon />
                                         </div>
                                     </div>
                                 )}
@@ -157,11 +122,9 @@ const ViewMachineMaster = () => {
                                     <div className="relative">
                                         <div
                                             className="mt-1 w-full rounded-md p-3 shadow-sm relative flex justify-between cursor-pointer"
-                                        // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-                                        // onClick={handleOpenDialogSub}
                                         >
                                             <p>{machineData?.subCategoryMasterDetail?.name}</p>
-                                            {dialogOpenSub ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                            <ExpandMoreIcon />
                                         </div>
                                     </div>
                                 )}

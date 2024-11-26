@@ -13,16 +13,13 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
-import { useLocation } from "react-router-dom";
 import axiosInstance from "../../axiosInstance";
 import ActionButton from "../../components/common/ActionButton";
 import CustomSwitch from "../../components/common/CustomSwitch";
 
 
 const EditCategory = ({ id, getCategoryData }) => {
-  const location = useLocation();
-  const categoryData = location.state;
-  const theme = useTheme();
+   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [open, setOpen] = useState(false);
   const [mainCategoryData, setMainCategoryData] = useState([]);
@@ -32,7 +29,6 @@ const EditCategory = ({ id, getCategoryData }) => {
     setValue,
     handleSubmit,
     formState: { errors },
-    reset
   } = useForm({
     mode: 'onSubmit', // Trigger validation on form submit
   });

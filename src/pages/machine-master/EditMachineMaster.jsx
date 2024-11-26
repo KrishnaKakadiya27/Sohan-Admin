@@ -23,9 +23,6 @@ const EditMachineMaster = () => {
   const [personIdName, setPersonIdName] = useState("");
   const [perosnId, setPersonId] = useState("");
   const [dialogOpenPerson, setDialogOpenPerson] = useState(false);
-  const [rawMaterialIdName, setRawMaterialIdName] = useState("");
-  const [rawMaterialId, setRawMaterialId] = useState("");
-  const [dialogOpenRaw, setDialogOpenRaw] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [catIdName, setCatIdName] = useState("");
   const [catId, setCatId] = useState("");
@@ -35,7 +32,6 @@ const EditMachineMaster = () => {
   const [dialogOpenSub, setDialogOpenSub] = useState(false);
   const [categoryId, setCategoryId] = useState(catId?.id);
   const [selectCatFlag, setSelectCatFlag] = useState(false)
-  console.log("subcatId", subCatId)
   const handleOpenDialogPerson = () => {
     setDialogOpenPerson(!dialogOpenPerson);
     setSearchTerm("");
@@ -43,14 +39,9 @@ const EditMachineMaster = () => {
   const handleOpenDialog = () => {
     setDialogOpen(!dialogOpen);
   }
-  const handleOpenDialogRaw = () => {
-    setDialogOpenRaw(!dialogOpenRaw);
-  }
   const handleOpenDialogSub = () => {
     setDialogOpenSub(!dialogOpenSub);
   }
-
-  console.log("catId", catId)
 
   // useForm setup with validation rules
   const {
@@ -103,6 +94,7 @@ const EditMachineMaster = () => {
 
   useEffect(() => {
     getMachineDataById();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 

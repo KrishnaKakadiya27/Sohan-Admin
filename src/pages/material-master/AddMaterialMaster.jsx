@@ -38,7 +38,6 @@ const AddMaterialMaster = () => {
     setValue,
     handleSubmit,
     formState: { errors },
-    reset
   } = useForm({
     mode: 'onSubmit', // Trigger validation on form submit
   });
