@@ -5,7 +5,7 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
   "& .MuiSwitch-switchBase.Mui-checked": {
     color: "#fff",
     "& + .MuiSwitch-track": {
-      backgroundColor: "#D8942E",
+      backgroundColor: "#E17A21",
       opacity: 1,
     },
   },

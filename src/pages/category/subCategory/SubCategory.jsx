@@ -129,7 +129,7 @@ const SubCategory = () => {
               reset();
             }}
           >
-            Add New Category
+            Add New Sub Category
           </Button>
         </div>
       </div>

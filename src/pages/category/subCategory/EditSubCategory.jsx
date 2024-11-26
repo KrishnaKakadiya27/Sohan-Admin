@@ -117,7 +117,7 @@ const EditSubCategory = ({ id, getCategoryData }) => {
                     className=" py-4"
                     onSubmit={handleSubmit(onSubmit)}
                 >
-                    <DialogTitle id="alert-dialog-title">{"Edit Category"}</DialogTitle>
+                    <DialogTitle id="alert-dialog-title">{"Edit Sub Category"}</DialogTitle>
                     <DialogContent>
 
 
@@ -250,7 +250,7 @@ const EditSubCategory = ({ id, getCategoryData }) => {
                                 }}
                                 className="text-nowrap"
                             >
-                                Update Category
+                                Update Sub Category
                             </Button>
                         </Box>
                     </DialogActions>

@@ -19,7 +19,7 @@ const SearchBar = ({ onSearch, placeholder = "Search here" }) => {
       }}
       sx={{
         "& .css-5h82ro-MuiInputBase-root-MuiInput-root::after ": {
-          borderBottom: "2px solid #D8942E",
+          borderBottom: "2px solid #E17A21",
         },
         width: { xs: "100%", sm: "auto" },
       }}

@@ -81,7 +81,7 @@ export default function Profile() {
   function stringAvatar(name) {
     return {
       sx: {
-        bgcolor: "#D8942E",
+        bgcolor: "#E17A21",
       },
       children: `${name?.split(' ')[0][0]}${name?.split(' ')[1] ? '' + name.split(' ')[1][0] : ''}`,
     };
@@ -103,7 +103,7 @@ export default function Profile() {
           {/* <img class="w-[50px] h-[50px] rounded-full" src={ProfilePic} alt="" /> */}
           <Avatar {...stringAvatar(personName)} />
           <div class="font-medium max-sm:hidden" style={{ lineHeight: "20px" }}>
-            <p className="text-[#D8942E] font-medium ">{personName}</p>
+            <p className="text-[#E17A21] font-medium ">{personName}</p>
             <p class="text-sm text-[#17263A] text-left  ">{roleName}</p>
           </div>
 
@@ -121,15 +121,15 @@ export default function Profile() {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem
+        {/* <MenuItem
           onClick={handleClose}
           disableRipple
           className="gap-[10px]"
           sx={{
             "&:hover": {
-              color: "#D8942E", // Change text color on hover
+              color: "#E17A21", // Change text color on hover
               "& .MuiSvgIcon-root": {
-                color: "#D8942E", // Change icon color on hover
+                color: "#E17A21", // Change icon color on hover
               },
             },
           }}
@@ -144,16 +144,16 @@ export default function Profile() {
           className="gap-[10px]"
           sx={{
             "&:hover": {
-              color: "#D8942E", // Change text color on hover
+              color: "#E17A21", // Change text color on hover
               "& .MuiSvgIcon-root": {
-                color: "#D8942E", // Change icon color on hover
+                color: "#E17A21", // Change icon color on hover
               },
             },
           }}
         >
           <SettingIcon width={"17"} />
           Setting
-        </MenuItem>
+        </MenuItem> */}
 
         <MenuItem
           onClick={handleSignOut}
@@ -161,9 +161,9 @@ export default function Profile() {
           className="gap-[10px]"
           sx={{
             "&:hover": {
-              color: "#D8942E", // Change text color on hover
+              color: "#E17A21", // Change text color on hover
               "& .MuiSvgIcon-root": {
-                color: "#D8942E", // Change icon color on hover
+                color: "#E17A21", // Change icon color on hover
               },
             },
           }}

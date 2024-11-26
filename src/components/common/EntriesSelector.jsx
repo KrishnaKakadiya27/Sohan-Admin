@@ -5,7 +5,7 @@ const StyledFormControl = styled(FormControl)(({ theme }) => ({
   minWidth: 50,
   "& .MuiInputBase-root": {
     borderRadius: "12px",
-    backgroundColor: "#D8942E",
+    backgroundColor: "#E17A21",
     color: "white",
     padding: "3px 12px",
     "& .MuiSvgIcon-root": {

@@ -113,7 +113,7 @@ const MaterialMaster = () => {
               <th className="py-[15px] px-[20px] text-nowrap text-[#454545] font-medium text-left">
                 Price Per Unit
               </th>
-              <th className="py-[15px] px-[20px] text-[#454545] font-medium text-left">
+              <th className="py-[15px] px-[20px] text-nowrap text-[#454545] font-medium text-left">
                 Root Level
               </th>
               <th className="py-2 px-[240px] text-[#454545] font-medium">Action</th>

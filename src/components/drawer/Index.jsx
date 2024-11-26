@@ -8,7 +8,7 @@ import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import * as React from "react";
 import { useDispatch } from "react-redux";
-import Stick from "../../assets/images/stick.png";
+import companyLogo from "../../assets/images/companyLogo.png";
 import { setDrawerOpen } from "../../redux/slices/authSlice";
 import Header from "./header";
 import SidebarList from "./sidebar/Index";
@@ -119,8 +119,8 @@ export default function DrawerBox(props) {
         <div>
           <div className="flex flex-col items-center justify-center w-full p-[30px]">
             <div className="flex gap-2">
-              <p className="font-extrabold text-5xl">Soham</p>
-              <img src={Stick} width={30} height={30} alt="logo" />
+              {/* <p className="font-extrabold text-5xl">Soham</p> */}
+              <img src={companyLogo} width={150} height={150} alt="logo" />
             </div>
           </div>
         </div>

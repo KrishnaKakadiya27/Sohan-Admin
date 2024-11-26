@@ -19,11 +19,11 @@ const Header = ({ handleDrawerOpen }) => {
         edge="start"
         sx={{ width: "50px" }}
       >
-        <MenuIcon width="25" color="#D8942E" />
+        <MenuIcon width="25" color="#E17A21" />
       </IconButton>
 
       <div className="flex items-center gap-8 ">
-        {/* <NotificationIcon color="#D8942E" width={"22"} /> */}
+        {/* <NotificationIcon color="#E17A21" width={"22"} /> */}
 
         <Profile />
       </div>

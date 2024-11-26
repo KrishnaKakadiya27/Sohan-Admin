@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import Logo from "../../../assets/images/logo.svg";
+import Logo from "../../../assets/images/companyLogo.png";
 import { setLoggedIn, setRole, setToken } from '../../../redux/slices/authSlice';
 
 const Login = () => {
@@ -41,12 +41,12 @@ const Login = () => {
             {/* Left section - Login form */}
             <div className="w-full md:w-1/2 flex items-center justify-center p-8">
                 <div className="max-w-md w-full">
-                    <div className="text-center flex justify-center mb-6">
+                    <div className="text-center flex justify-center mb-2">
                         {/* Logo */}
-                        <img src={Logo} style={{ width: "200px", height: "170px" }} alt='logo' />
+                        <img src={Logo} style={{ width: "200px", height: "200px" }} alt='logo' />
                     </div>
 
-                    <h2 className="text-2xl font-bold text-center text-[#D3A99C] mb-4">Log in</h2>
+                    <h2 className="text-2xl font-bold text-center text-[#E17A21] mb-4">Log in</h2>
 
                     <form>
                         {/* Email Input */}
@@ -54,7 +54,7 @@ const Login = () => {
                             <input
                                 id="email"
                                 type="email"
-                                className="w-full px-4 py-2 mt-2 border rounded-lg shadow-md focus:outline-none focus:ring focus:ring-[#D3A99C]"
+                                className="w-full px-4 py-2 mt-2 border rounded-lg shadow-md focus:outline-none focus:ring focus:ring-[#E17A21]"
                                 placeholder="Email"
                                 required
                                 onChange={(e) => setEmail(e.target.value)}

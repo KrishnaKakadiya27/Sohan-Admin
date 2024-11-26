@@ -13,7 +13,7 @@ const ForgotPassword = () => {
                         <img src={Logo} style={{width:"200px" , height:"170px"}} />
                     </div>
 
-                    <h2 className="text-2xl font-bold text-center text-[#D8942E] mb-4">Forgot Password?</h2>
+                    <h2 className="text-2xl font-bold text-center text-[#E17A21] mb-4">Forgot Password?</h2>
 
                     <form>
                         {/* Email Input */}

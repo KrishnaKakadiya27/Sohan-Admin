@@ -8,9 +8,17 @@ import * as React from "react";
 import { useLocation, useNavigate } from "react-router-dom"; // Import necessary hooks
 import { ReactComponent as DropdownBottomIcon } from "../../../assets/icons/dropdownBottomIcon.svg";
 import { ReactComponent as DropdownRightIcon } from "../../../assets/icons/dropdownRightIcon.svg";
-import { ReactComponent as Category } from "../../../assets/icons/sidebarIcon/category.svg";
-import { ReactComponent as Dashboard } from "../../../assets/icons/sidebarIcon/dashboard.svg";
 import { ReactComponent as SidebarArrowIcon } from "../../../assets/icons/sidebarIcon/sidebarArrowIcon.svg";
+import { ReactComponent as RawMaterial } from "../../../assets/icons/sidebarIcon/processing.svg";
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import OperatorMaster from '@mui/icons-material/ManageAccountsOutlined';
+import MachineMaster from '@mui/icons-material/PrecisionManufacturingOutlined';
+import ItemMaster from '@mui/icons-material/FactCheckOutlined';
+import Dashboard from '@mui/icons-material/DashboardOutlined';
+import Category from '@mui/icons-material/AutoAwesomeMosaicOutlined';
+import HandymanOutlinedIcon from '@mui/icons-material/HandymanOutlined';
+import EngineeringOutlinedIcon from '@mui/icons-material/EngineeringOutlined';
+import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 
 export default function SidebarList() {
   const [open, setOpen] = React.useState(null);
@@ -134,7 +142,7 @@ export default function SidebarList() {
   };
 
   const getTextColor = (path) => {
-    return location.pathname === path ? "#D8942E" : "inherit"; // Match current pathname to highlight
+    return location.pathname === path ? "#E17A21" : "inherit"; // Match current pathname to highlight
   };
 
   return (
@@ -147,13 +155,13 @@ export default function SidebarList() {
       <ListItemButton
         sx={{
           py: "12px",
-          "&:hover": { color: "#D8942E" },
+          "&:hover": { color: "#E17A21" },
           color: getTextColor("/dashboard"),
         }}
         onClick={() => handleNavigation("/dashboard")} // Navigate on click
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
-          <Dashboard width={"20"} color="grey" />
+          <Dashboard style={{color:"#E17A21",fontSize:"28px",marginLeft:"-3px"}} />
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItemButton>
@@ -162,13 +170,13 @@ export default function SidebarList() {
       <ListItemButton
         sx={{
           py: "12px",
-          "&:hover": { color: "#D8942E" },
-          color: isActivePersonMaster() ? "#D8942E" : getTextColor("/person-master"),
+          "&:hover": { color: "#E17A21" },
+          color: isActivePersonMaster() ? "#E17A21" : getTextColor("/person-master"),
         }}
         onClick={() => handleNavigation("/person-master")} // Navigate on click
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
-          <Dashboard width={"20"} color="grey" />
+          <PersonOutlineOutlinedIcon style={{color:"#E17A21",fontSize:"30px",marginLeft:"-4px"}} />
         </ListItemIcon>
         <ListItemText primary="Person Master" />
       </ListItemButton>
@@ -178,13 +186,13 @@ export default function SidebarList() {
       <ListItemButton
         sx={{
           py: "12px",
-          "&:hover": { color: "#D8942E" },
-          color: isActiveOperatorMaster() ? "#D8942E" : getTextColor("/operator-master"),
+          "&:hover": { color: "#E17A21" },
+          color: isActiveOperatorMaster() ? "#E17A21" : getTextColor("/operator-master"),
         }}
         onClick={() => handleNavigation("/operator-master")} // Navigate on click
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
-          <Dashboard width={"20"} color="grey" />
+          <OperatorMaster style={{color:"#E17A21",fontSize:"30px",marginLeft:"-3px"}} />
         </ListItemIcon>
         <ListItemText primary="Operator Master" />
       </ListItemButton>
@@ -194,7 +202,7 @@ export default function SidebarList() {
       <ListItemButton
         sx={{
           py: "12px",
-          "&:hover": { color: "#D8942E" },
+          "&:hover": { color: "#E17A21" },
           color: getTextColor("/item-master"),
         }}
         onClick={() => handleNavigation("/item-master")} // Navigate on click
@@ -207,32 +215,33 @@ export default function SidebarList() {
 
 
       {/* raw material Master */}
-      {role === "superadmin" && <ListItemButton
+      {role === "SuperAdmin" && <ListItemButton
         sx={{
           py: "12px",
-          "&:hover": { color: "#D8942E" },
-          color: isActiveRawMaterialMaster() ? "#D8942E" : getTextColor("/raw_material_master"),
+          "&:hover": { color: "#E17A21" },
+          color: isActiveRawMaterialMaster() ? "#E17A21" : getTextColor("/raw_material_master"),
         }}
         onClick={() => handleNavigation("/raw_material_master")} // Navigate on click
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
-          <Dashboard width={"20"} color="grey" />
+          {/* <RawMaterial width={"27"} style={{fontStyle:"bold"}} /> */}
+          <AddShoppingCartOutlinedIcon style={{color:"#E17A21",fontSize:"30px",marginLeft:"-3px"}} />
         </ListItemIcon>
         <ListItemText primary="Raw Material Master" />
       </ListItemButton>}
 
 
       {/* Item Master */}
-      {role === "superadmin" && <ListItemButton
+      {role === "SuperAdmin" && <ListItemButton
         sx={{
           py: "12px",
-          "&:hover": { color: "#D8942E" },
-          color: isActiveItemMaster() ? "#D8942E" : getTextColor("/item-master"),
+          "&:hover": { color: "#E17A21" },
+          color: isActiveItemMaster() ? "#E17A21" : getTextColor("/item-master"),
         }}
         onClick={() => handleNavigation("/item-master")} // Navigate on click
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
-          <Dashboard width={"20"} color="grey" />
+          <ItemMaster style={{color:"#E17A21",fontSize:"30px",marginLeft:"-3px"}} />
         </ListItemIcon>
         <ListItemText primary="Item Master" />
       </ListItemButton>}
@@ -242,13 +251,13 @@ export default function SidebarList() {
       <ListItemButton
         sx={{
           py: "12px",
-          "&:hover": { color: "#D8942E" },
-          color: isActiveMachineMaster() ? "#D8942E" : getTextColor("/machine-master"),
+          "&:hover": { color: "#E17A21" },
+          color: isActiveMachineMaster() ? "#E17A21" : getTextColor("/machine-master"),
         }}
         onClick={() => handleNavigation("/machine-master")} // Navigate on click
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
-          <Dashboard width={"20"} color="grey" />
+          <MachineMaster style={{color:"#E17A21",fontSize:"30px",marginLeft:"-3px"}} />
         </ListItemIcon>
         <ListItemText primary="Machine Master" />
       </ListItemButton>
@@ -257,17 +266,17 @@ export default function SidebarList() {
       <ListItemButton
         sx={{
           py: "12px",
-          "&:hover": { color: "#D8942E" },
-          color: open === "category" || basePathsCategories.includes(location.pathname) ? "#D8942E" : "inherit", // Highlight when expanded
+          "&:hover": { color: "#E17A21" },
+          color: open === "category" || basePathsCategories.includes(location.pathname) ? "#E17A21" : "inherit", // Highlight when expanded
         }}
         onClick={() => handleClick("category")} // Expand/collapse only
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
-          <Category width={"20"} color="grey" />
+          <Category style={{color:"#E17A21",fontSize:"30px",marginLeft:"-3px"}} />
         </ListItemIcon>
         <ListItemText primary="Categories" />
         {open === "category" ? (
-          <DropdownBottomIcon color="#D8942E" width="12" />
+          <DropdownBottomIcon color="#E17A21" width="12" />
         ) : (
           <DropdownRightIcon color="grey" width="7" />
         )}
@@ -278,7 +287,7 @@ export default function SidebarList() {
             sx={{
               py: "5px",
               pl: 5,
-              "&:hover": { color: "#D8942E" },
+              "&:hover": { color: "#E17A21" },
               color: getTextColor("/category"),
             }}
             onClick={() => handleNavigation("/category")} // Navigate on sub-item click
@@ -298,7 +307,7 @@ export default function SidebarList() {
             sx={{
               py: "5px",
               pl: 5,
-              "&:hover": { color: "#D8942E" },
+              "&:hover": { color: "#E17A21" },
               color: getTextColor("/sub-category"),
             }}
             onClick={() => handleNavigation("/sub-category")} // Navigate on sub-item click
@@ -320,7 +329,7 @@ export default function SidebarList() {
             sx={{
               py: "12px",
               pl: 4,
-              "&:hover": { color: "#D8942E" },
+              "&:hover": { color: "#E17A21" },
               color: getTextColor("/content/list"),
             }}
             onClick={() => handleNavigation("/content/list")} // Navigate on sub-item click

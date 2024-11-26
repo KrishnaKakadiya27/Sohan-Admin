@@ -13,7 +13,7 @@ const ResetPassword = () => {
                         <img src={Logo} style={{width:"200px" , height:"170px"}} />
                     </div>
 
-                    <h2 className="text-2xl font-bold text-center text-[#D8942E] mb-4">Reset - Password</h2>
+                    <h2 className="text-2xl font-bold text-center text-[#E17A21] mb-4">Reset - Password</h2>
                     <div className="flex justify-center gap-1 items-start mb-6 px-2">
                         <a href="#" className="text-sm text-gray-400 hover:text-gray-500 ml-5">Set new password for your next login and access</a>
 

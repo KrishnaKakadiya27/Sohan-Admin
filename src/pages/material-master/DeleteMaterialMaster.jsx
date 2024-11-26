@@ -20,7 +20,7 @@ const DeleteMaterialMaster = ({id,getListData}) => {
       try {
           const response = await axiosInstance.delete(`materialMaster?uuid=${id}`)
           if (response?.status === 200) {
-            toast.success("Deleted material data successfully")
+            toast.success("Deleted item data successfully")
               getListData();
               handleClose();
           }
