@@ -34,7 +34,7 @@ const AddPersonMaster = () => {
                 country: data?.country,
                 password: data?.password,
                 category: data?.category,
-                role: data?.role
+                role: "Admin"
             })
 
             if (response.status === 200) {
@@ -220,9 +220,8 @@ const AddPersonMaster = () => {
                                 Role<span className="text-red-500">*</span>
                             </label>
                             <Controller
-                                name="role"
+                                name=""
                                 control={control}
-                                rules={{ required: 'Role is required', validate: (value) => value !== "Select Role" || "Please select a valid role" }}
                                 render={({ field }) => (
                                     <select
                                         {...field}
@@ -243,7 +242,6 @@ const AddPersonMaster = () => {
                                     </select>
                                 )}
                             />
-                            {errors.role && <p className="text-red-500 mt-1">{errors.role?.message}</p>}
                         </Grid>
 
                         <Grid item xs={12} md={6}>

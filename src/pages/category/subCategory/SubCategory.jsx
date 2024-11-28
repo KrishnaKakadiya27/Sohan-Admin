@@ -208,7 +208,7 @@ const SubCategory = () => {
                   :
                   <tr>
                     <td colSpan={12} className="py-2 px-4  text-center text-nowrap">
-                      No Category Found
+                      No Sub Category Found
                     </td>
                   </tr>)
               }

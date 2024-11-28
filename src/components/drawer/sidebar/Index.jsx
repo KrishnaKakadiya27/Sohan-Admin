@@ -161,13 +161,15 @@ export default function SidebarList() {
         onClick={() => handleNavigation("/dashboard")} // Navigate on click
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
-          <Dashboard style={{color:"#E17A21",fontSize:"28px",marginLeft:"-3px"}} />
+          <Dashboard style={{ color: "#E17A21", fontSize: "28px", marginLeft: "-3px" }} />
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItemButton>
 
       {/* Person Master */}
-      <ListItemButton
+      {
+        role === "SuperAdmin" &&
+        <ListItemButton
         sx={{
           py: "12px",
           "&:hover": { color: "#E17A21" },
@@ -176,10 +178,11 @@ export default function SidebarList() {
         onClick={() => handleNavigation("/person-master")} // Navigate on click
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
-          <PersonOutlineOutlinedIcon style={{color:"#E17A21",fontSize:"30px",marginLeft:"-4px"}} />
+          <PersonOutlineOutlinedIcon style={{ color: "#E17A21", fontSize: "30px", marginLeft: "-4px" }} />
         </ListItemIcon>
         <ListItemText primary="Person Master" />
       </ListItemButton>
+      }
 
 
       {/* Operator Master */}
@@ -192,7 +195,7 @@ export default function SidebarList() {
         onClick={() => handleNavigation("/operator-master")} // Navigate on click
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
-          <OperatorMaster style={{color:"#E17A21",fontSize:"30px",marginLeft:"-3px"}} />
+          <OperatorMaster style={{ color: "#E17A21", fontSize: "30px", marginLeft: "-3px" }} />
         </ListItemIcon>
         <ListItemText primary="Operator Master" />
       </ListItemButton>
@@ -215,7 +218,7 @@ export default function SidebarList() {
 
 
       {/* raw material Master */}
-      {role === "superadmin" && <ListItemButton
+      {role === "SuperAdmin" && <ListItemButton
         sx={{
           py: "12px",
           "&:hover": { color: "#E17A21" },
@@ -225,14 +228,14 @@ export default function SidebarList() {
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
           {/* <RawMaterial width={"27"} style={{fontStyle:"bold"}} /> */}
-          <AddShoppingCartOutlinedIcon style={{color:"#E17A21",fontSize:"30px",marginLeft:"-3px"}} />
+          <AddShoppingCartOutlinedIcon style={{ color: "#E17A21", fontSize: "30px", marginLeft: "-3px" }} />
         </ListItemIcon>
         <ListItemText primary="Raw Material Master" />
       </ListItemButton>}
 
 
       {/* Item Master */}
-      {role === "superadmin" && <ListItemButton
+      {role === "SuperAdmin" && <ListItemButton
         sx={{
           py: "12px",
           "&:hover": { color: "#E17A21" },
@@ -241,7 +244,7 @@ export default function SidebarList() {
         onClick={() => handleNavigation("/item-master")} // Navigate on click
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
-          <ItemMaster style={{color:"#E17A21",fontSize:"30px",marginLeft:"-3px"}} />
+          <ItemMaster style={{ color: "#E17A21", fontSize: "30px", marginLeft: "-3px" }} />
         </ListItemIcon>
         <ListItemText primary="Item Master" />
       </ListItemButton>}
@@ -257,7 +260,7 @@ export default function SidebarList() {
         onClick={() => handleNavigation("/machine-master")} // Navigate on click
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
-          <MachineMaster style={{color:"#E17A21",fontSize:"30px",marginLeft:"-3px"}} />
+          <MachineMaster style={{ color: "#E17A21", fontSize: "30px", marginLeft: "-3px" }} />
         </ListItemIcon>
         <ListItemText primary="Machine Master" />
       </ListItemButton>
@@ -272,7 +275,7 @@ export default function SidebarList() {
         onClick={() => handleClick("category")} // Expand/collapse only
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
-          <Category style={{color:"#E17A21",fontSize:"30px",marginLeft:"-3px"}} />
+          <Category style={{ color: "#E17A21", fontSize: "30px", marginLeft: "-3px" }} />
         </ListItemIcon>
         <ListItemText primary="Categories" />
         {open === "category" ? (
