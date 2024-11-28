@@ -86,26 +86,6 @@ const ViewRawMaterial = () => {
 
                         <Grid item xs={12} md={6}>
                             <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                                Person Master Name<span className="text-red-500">*</span>
-                            </label>
-                            <Controller
-                                name="aadharCardNumber"
-                                control={control}
-                                defaultValue=""                            
-                                render={({ field }) => (
-                                    <input
-                                        {...field}
-                                        type="text"
-                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
-                                        placeholder="Aadhar Card Number"
-                                        value={rawMaterialData?.personMasterDetailes?.name}
-                                    />
-                                )}
-                            />
-                        </Grid>
-
-                        <Grid item xs={12} md={6}>
-                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
                                 Price Per Unit<span className="text-red-500">*</span>
                             </label>
                             <Controller

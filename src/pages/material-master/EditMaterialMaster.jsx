@@ -1,6 +1,4 @@
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Box, Button, Grid, useMediaQuery } from '@mui/material';
+import { Autocomplete, Box, Button, CircularProgress, Grid, TextField, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from "@mui/material/styles";
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -8,8 +6,6 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
 import CustomSwitch from '../../components/common/CustomSwitch';
-import SelectPersonMasterDialog from '../raw-material-master/SelectPersonMasterDialog';
-import SelectRawMaterialMaster from './SelectRawMaterialMaster';
 
 
 const EditMaterialMaster = () => {
@@ -18,29 +14,86 @@ const EditMaterialMaster = () => {
   const UId = useParams();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [materialData, setMaterialData] = useState([]);
-
-  const [personIdName, setPersonIdName] = useState("");
   const [perosnId, setPersonId] = useState("");
-  const [dialogOpenPerson, setDialogOpenPerson] = useState(false);
   const [rawMaterialIdName, setRawMaterialIdName] = useState("");
   const [rawMaterialId, setRawMaterialId] = useState("");
-  const [dialogOpenRaw, setDialogOpenRaw] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleOpenDialogPerson = () => {
-    setDialogOpenPerson(!dialogOpenPerson);
-    setSearchTerm("");
-  }
+  const [personName, setPersonName] = useState([]); // List of people from API
+  const [recordsPerPage] = useState(10); // Records per page
+  const [hasMore, setHasMore] = useState(true); // To check if there are more pages
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(''); // Debounced search term
+  const [loading, setLoading] = useState(false); // Loading state for fetching
+  const [selectedPerson, setSelectedPerson] = useState(null); // Selected person info
 
-  const handleOpenDialogRaw = () => {
-    setDialogOpenRaw(!dialogOpenRaw);
-  }
+
+  // Debounce searchTerm to optimize API calls
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
+
+  // Fetch person data from the API
+  const fetchPersonData = async (currentPage) => {
+    setLoading(true);
+    try {
+      const searchValue = debouncedSearchTerm ? JSON.stringify({ search: debouncedSearchTerm }) : '';
+      const response = await axiosInstance.get(
+        `/rawMaterialMaster?page=${currentPage}&records_per_page=${recordsPerPage}&search=${searchValue}`
+      );
+      const newPersonData = response.data.payload.data;
+      setPersonName((prev) => (currentPage === 1 ? newPersonData : [...prev, ...newPersonData]));
+      setHasMore(newPersonData.length > 0);
+    } catch (error) {
+      console.error('Error fetching person data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initial data load and search handling
+  useEffect(() => {
+    fetchPersonData(1);
+  }, [debouncedSearchTerm]);
+  // This effect will reset the personId when searchTerm changes.
+  useEffect(() => {
+    if (!searchTerm) {
+      setPersonId("");  // Reset personId when searchTerm is empty
+    }
+  }, [searchTerm]);
+
+  const handleSelectPerson = (event, newValue) => {
+    if (newValue) {
+      if (newValue.inputValue) {
+        // New value added via freeSolo
+        setSelectedPerson({ name: newValue.inputValue, isNew: true });
+        setValue('rawMaterialMasterName', newValue.inputValue, { shouldValidate: true });
+      } else {
+        // Option selected from the list
+        setSelectedPerson({
+          id: newValue.category_master_id,
+          uuid: newValue.uuid,
+          name: newValue.name
+        });
+        setValue('rawMaterialMasterName', newValue.name, { shouldValidate: true });
+      }
+      trigger("rawMaterialMasterName"); // Trigger validation after selecting a value
+    } else {
+      // Reset if no value is selected
+      setSelectedPerson(null);
+      setValue('rawMaterialMasterName', '', { shouldValidate: true });
+    }
+  };
 
 
   // useForm setup with validation rules
   const {
     control,
     handleSubmit,
+    clearErrors,
+    trigger,
     setValue,
     formState: { errors },
   } = useForm({
@@ -52,8 +105,7 @@ const EditMaterialMaster = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axiosInstance.put(`materialMaster?uuid=${UId?.id}`, {
-        person_master_id: data?.person_id?.uuid,
-        raw_material_master_id: data?.raw_material_id?.uuid,
+        raw_material_master_name: selectedPerson?.name,
         unit: data?.Units,
         total_stock: data?.totalStocks,
         price_per_unit: data?.pricePerUnit,
@@ -87,8 +139,21 @@ const EditMaterialMaster = () => {
       const response = await axiosInstance.get(`materialMaster/detail?uuid=${UId?.id}`)
       if (response.status === 200) {
         setMaterialData(response?.data?.payload?.data)
-      }
+        // Set the raw material details
+        const rawMaterial = response?.data?.payload?.data?.rawMaterialMasterDetail;
+        if (rawMaterial) {
+          setRawMaterialIdName(rawMaterial.name); // For display in Autocomplete
+          setSearchTerm(rawMaterial.name);       // Pre-fill the searchTerm
+          setRawMaterialId({
+            id: rawMaterial.id,
+            uuid: rawMaterial.uuid,
+            name: rawMaterial.name
+          });
+          setValue("rawMaterialMasterName", rawMaterial, { shouldValidate: true }); // Update the form value
+        }
 
+      }
+      trigger("rawMaterialMasterName");
     } catch (error) {
       console.log("error", error);
     }
@@ -101,28 +166,7 @@ const EditMaterialMaster = () => {
       setValue("Units", materialData?.unit);
       setValue("notificationStatus", materialData?.is_notification);
       setValue("activeStatus", materialData?.is_active);
-      if (materialData?.personMasterDetailes?.name) {
-        setValue("person_id", materialData?.personMasterDetailes?.name);
-        setPersonIdName(materialData?.personMasterDetailes?.name);
-        setPersonId({
-          id: materialData?.personMasterDetailes,
-          uuid: materialData?.personMasterDetailes?.uuid,
-          name: materialData?.personMasterDetailes?.name
-        });
-      } else {
-        setPersonIdName("Select Person Master Name");  // Default value when no category name is found
-      }
-      if (materialData?.rawMaterialMasterDetail?.name) {
-        setValue("raw_material_id", materialData?.rawMaterialMasterDetail?.name);
-        setRawMaterialIdName(materialData?.rawMaterialMasterDetail?.name);
-        setRawMaterialId({
-          id: materialData?.rawMaterialMasterDetail,
-          uuid: materialData?.rawMaterialMasterDetail?.uuid,
-          name: materialData?.rawMaterialMasterDetail?.name
-        });
-      } else {
-        setRawMaterialIdName("Select Person Master Name");  // Default value when no category name is found
-      }
+
     }
   }, [materialData, setValue]);
   return (
@@ -155,77 +199,108 @@ const EditMaterialMaster = () => {
 
             <Grid item xs={12} md={6} >
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                Person Master Name<span className="text-red-500">*</span>
-              </label>
-              <Controller
-                name="person_id"
-                control={control}
-                rules={{ required: "Person Master ID is required" }}
-                render={({ field }) => (
-                  <div className="relative">
-                    <div
-                      className="mt-1 w-full rounded-md p-3 relative flex shadow-sm justify-between cursor-pointer"
-                      // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-                      onClick={handleOpenDialogPerson}
-                    >
-                      <p>{personIdName ? personIdName : "Select Person Master"}</p>
-                      {dialogOpenPerson ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                    </div>
-                    <SelectPersonMasterDialog
-                      open={dialogOpenPerson}
-                      setOpen={setDialogOpenPerson}
-                      personIdName={personIdName}
-                      searchTerm={searchTerm}
-                      setSearchTerm={setSearchTerm}
-                      setPersonId={(id) => {
-                        // setValue("cat_id", id,id);
-                        setPersonIdName(id?.name)
-                        setValue("person_id", id, { shouldValidate: true });
-                        setPersonId({ id: id?.id, uuid: id?.uuid, name: id?.name });
-                      }}
-                    />
-                  </div>
-                )}
-              />
-              {errors.person_id && (
-                <span className="text-red-500">{errors.person_id.message}</span>
-              )}
-            </Grid>
-            <Grid item xs={12} md={6} >
-              <label className="block text-[17px] font-medium text-gray-700 pb-2">
                 Raw Material Master Name<span className="text-red-500">*</span>
               </label>
               <Controller
-                name="raw_material_id"
+                name='rawMaterialMasterName'
                 control={control}
-                rules={{ required: "Raw Material ID is required" }}
+                rules={{
+                  required: "Raw Material Master Name is required", // Validation rule
+                }}
                 render={({ field }) => (
-                  <div className="relative">
-                    <div
-                      className="mt-1 w-full rounded-md p-3 relative flex shadow-sm justify-between cursor-pointer"
-                      // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-                      onClick={handleOpenDialogRaw}
-                    >
-                      <p>{rawMaterialIdName ? rawMaterialIdName : "Select Raw Material Name"}</p>
-                      {dialogOpenRaw ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                    </div>
-                    <SelectRawMaterialMaster
-                      open={dialogOpenRaw}
-                      setOpen={setDialogOpenRaw}
-                      rawMaterialIdName={rawMaterialIdName}
-                      setRawMaterialId={(id) => {
-                        // setValue("cat_id", id,id);
-                        setRawMaterialIdName(id?.name)
-                        setValue("raw_material_id", id, { shouldValidate: true });
-                        setRawMaterialId({ id: id?.id, uuid: id?.uuid, name: id?.name });
-                      }}
-                    />
-                  </div>
+                  <>
+                  <Autocomplete
+                    {...field}
+                    id="raw-autocomplete"
+                    options={personName}
+                    getOptionLabel={(option) => option.name || option.inputValue || ""}
+                    filterOptions={(options, state) => {
+                      const filtered = options.filter((option) =>
+                        option.name.toLowerCase().includes(state.inputValue.toLowerCase())
+                      );
+
+                      const { inputValue } = state;
+                      const isExisting = options.some((option) => inputValue === option.name);
+                      if (inputValue !== '' && !isExisting) {
+                        filtered.push({
+                          inputValue,
+                          name: `Add ${inputValue}`,
+                        });
+                      }
+
+                      return filtered;
+                    }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        border: "none", // Removes the default border
+                      },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none", // Ensures the border outline is hidden
+                      },
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        border: "none", // Prevents border from reappearing on focus
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        border: "none", // Prevents border from appearing on hover
+                      },
+                      "& .MuiAutocomplete-inputRoot": {
+                        padding: 0, // Removes padding for a clean look
+                      },
+                    }}
+
+                    onChange={(event, newValue) => {
+                      if (newValue && newValue.name && newValue.name.startsWith('Add ')) {
+                        // Remove the 'Add ' prefix
+                        newValue.name = newValue.name.replace('Add ', '');
+                      }
+                      handleSelectPerson(event, newValue);
+                    }}
+                    onInputChange={(event, newInputValue) => {   
+                      setValue('rawMaterialMasterName', newInputValue); // Update value while typing
+                      trigger("rawMaterialMasterName"); // Trigger validation while typing
+                      setSearchTerm(newInputValue)}}
+                    inputValue={searchTerm}
+                    isOptionEqualToValue={(option, value) => option.uuid === value.uuid}
+                    loading={loading}
+                    disableClearable
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        fullWidth
+                        placeholder="Name"
+                        error={!!errors.rawMaterialMasterName} // Show error if validation fails
+                        InputProps={{
+                          ...params.InputProps,
+                          className: "mt-1 block w-full rounded-md shadow-sm p-3 border-none bg-white", // Tailwind CSS classes for styling
+                          style: {
+                            borderColor: "transparent", // Set border color to transparent
+                          },
+                          endAdornment: (
+                            <>
+                              {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                              {params.InputProps.endAdornment}
+                            </>
+                          ),
+                        }}
+                        InputLabelProps={{
+                          ...params.InputLabelProps,
+                          shrink: Boolean(searchTerm) || params.inputProps?.value.length > 0, // Conditionally shrink label
+                        }}
+                      />
+                    )}
+                    renderOption={(props, option) => <li {...props}>{option.name}</li>}
+                    freeSolo
+                  />
+                    {errors.rawMaterialMasterName && (
+                <Typography sx={{ marginTop: 0.4, color: "#ef4444" }}>
+                  {errors.rawMaterialMasterName.message}
+                </Typography>
+              )}
+              </>
                 )}
               />
-              {errors.raw_material_id && (
-                <span className="text-red-500">{errors.raw_material_id.message}</span>
-              )}
+            
             </Grid>
 
 
@@ -247,7 +322,7 @@ const EditMaterialMaster = () => {
                   <input
                     {...field}
                     type="text"
-                    className="mt-1 block w-full rounded-md shadow-sm p-3"
+                    className="mt-1 block w-full h-[55px] rounded-md shadow-sm p-3"
                     placeholder="Total Stocks"
                   />
                 )}
@@ -272,7 +347,7 @@ const EditMaterialMaster = () => {
                   <input
                     {...field}
                     type="text"
-                    className="mt-1 block w-full rounded-md shadow-sm p-3"
+                    className="mt-1 block w-full h-[55px] rounded-md shadow-sm p-3"
                     placeholder="Units"
                   />
                 )}
@@ -298,7 +373,7 @@ const EditMaterialMaster = () => {
                   <input
                     {...field}
                     type="text"
-                    className="mt-1 block w-full rounded-md shadow-sm p-3"
+                    className="mt-1 block w-full h-[55px] rounded-md shadow-sm p-3"
                     placeholder="Price Per Unit"
                   />
                 )}
@@ -306,7 +381,7 @@ const EditMaterialMaster = () => {
               {errors.pricePerUnit && <p className="text-red-500 mt-1">{errors.pricePerUnit?.message}</p>}
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={12}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
                 Root Level<span className="text-red-500">*</span>
               </label>
@@ -325,7 +400,7 @@ const EditMaterialMaster = () => {
                   <input
                     {...field}
                     type="text"
-                    className="mt-1 block w-full rounded-md shadow-sm p-3"
+                    className="mt-1 block w-full h-[55px] rounded-md shadow-sm p-3"
                     placeholder="Root Level"
                   />
                 )}

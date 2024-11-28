@@ -137,7 +137,7 @@ const EditCategory = ({ id, getCategoryData }) => {
                         <input
                           {...field}
                           type="text"
-                          className="mt-1 block w-full rounded-md shadow-sm p-3"
+                          className="mt-1 block w-full h-[55px] rounded-md shadow-sm p-3"
                           placeholder="Name"
                         />
                       )}

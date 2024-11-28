@@ -149,27 +149,28 @@ const AddOperator = () => {
               />
               {errors.mobileNumber && <p className="text-red-500 mt-1">{errors.mobileNumber?.message}</p>}
             </Grid>
-
             <Grid item xs={12} md={6}>
-              <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                Country<span className="text-red-500">*</span>
+              <label className="block text-[17px] font-medium text-gray-700 pb-2 text-nowrap">
+                Working Hours without Lunch<span className="text-red-500">*</span>
               </label>
               <Controller
-                name="country"
+                name="working_hours_without_lunch"
                 control={control}
                 defaultValue=""
-                rules={{ required: 'Country is required' }}
+                rules={{ required: 'Working hrs is required' }}
                 render={({ field }) => (
                   <input
                     {...field}
                     type="text"
                     className="mt-1 block w-full rounded-md shadow-sm p-3"
-                    placeholder="Country"
+                    placeholder="Working Hours without Lunch"
                   />
                 )}
               />
-              {errors.country && <p className="text-red-500 mt-1">{errors.country?.message}</p>}
+              {errors.state && <p className="text-red-500 mt-1">{errors.state?.message}</p>}
             </Grid>
+
+           
 
             <Grid item xs={12} md={12}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
@@ -191,7 +192,26 @@ const AddOperator = () => {
               />
               {errors.address && <p className="text-red-500 mt-1">{errors.address?.message}</p>}
             </Grid>
-
+            <Grid item xs={12} md={6}>
+              <label className="block text-[17px] font-medium text-gray-700 pb-2">
+                Country<span className="text-red-500">*</span>
+              </label>
+              <Controller
+                name="country"
+                control={control}
+                defaultValue=""
+                rules={{ required: 'Country is required' }}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    type="text"
+                    className="mt-1 block w-full rounded-md shadow-sm p-3"
+                    placeholder="Country"
+                  />
+                )}
+              />
+              {errors.country && <p className="text-red-500 mt-1">{errors.country?.message}</p>}
+            </Grid>
             <Grid item xs={12} md={6}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
                 State<span className="text-red-500">*</span>
@@ -235,26 +255,7 @@ const AddOperator = () => {
             </Grid>
 
 
-            <Grid item xs={12} md={6}>
-              <label className="block text-[17px] font-medium text-gray-700 pb-2 text-nowrap">
-                Working Hours without Lunch<span className="text-red-500">*</span>
-              </label>
-              <Controller
-                name="working_hours_without_lunch"
-                control={control}
-                defaultValue=""
-                rules={{ required: 'Working hrs is required' }}
-                render={({ field }) => (
-                  <input
-                    {...field}
-                    type="text"
-                    className="mt-1 block w-full rounded-md shadow-sm p-3"
-                    placeholder="Working Hours without Lunch"
-                  />
-                )}
-              />
-              {errors.state && <p className="text-red-500 mt-1">{errors.state?.message}</p>}
-            </Grid>
+           
 
             <Grid item xs={12} md={6}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">

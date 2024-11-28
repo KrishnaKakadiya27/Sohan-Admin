@@ -1,6 +1,6 @@
 import EditIcon from "@mui/icons-material/Edit"
 import VisibilityIcon from "@mui/icons-material/Visibility"
-import { Button, CircularProgress } from '@mui/material'
+import { Autocomplete, Button, CircularProgress, createFilterOptions, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../axiosInstance'
@@ -11,6 +11,8 @@ import SearchBar from '../../components/common/SearchBar'
 import TableLayoutBox from '../../components/common/TableLayoutBox'
 import DeleteRawMaterial from './DeleteRawMaterial'
 
+
+
 const RawMaterialMaster = () => {
   const navigate = useNavigate();
 
@@ -20,6 +22,19 @@ const RawMaterialMaster = () => {
   const [rawMaterialData, setRawMaterialData] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+
+
+  // Debounce the searchTerm
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500); // Adjust debounce delay as needed (e.g., 500ms)
+
+    return () => {
+      clearTimeout(handler); // Cleanup previous timeout
+    };
+  }, [searchTerm]);
 
 
   const handleEntriesChange = (event) => {
@@ -39,13 +54,13 @@ const RawMaterialMaster = () => {
   useEffect(() => {
     getListData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, entries, searchTerm])
+  }, [currentPage, entries, debouncedSearchTerm])
 
   const getListData = async () => {
 
     try {
       setIsLoading(true)
-      const searchValue = searchTerm ? JSON.stringify({ search: searchTerm }) : ""
+      const searchValue = debouncedSearchTerm ? JSON.stringify({ search: debouncedSearchTerm }) : '';
       const response = await axiosInstance.get(`/rawMaterialMaster?page=${currentPage}&records_per_page=${entries}&search=${searchValue}`)
       if (response.status === 200) {
         setRawMaterialData(response?.data?.payload?.data)
@@ -72,7 +87,7 @@ const RawMaterialMaster = () => {
           />
           <span className="text-gray-700">Entries</span>
         </div>
-
+       
         <div className="flex gap-5 justify-between items-center flex-wrap">
           <SearchBar onSearch={handleSearch} />
           <Button

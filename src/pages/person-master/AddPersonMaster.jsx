@@ -119,128 +119,6 @@ const AddPersonMaster = () => {
                             {errors.email && <p className="text-red-500 mt-1">{errors.email?.message}</p>}
                         </Grid>
 
-
-                        <Grid item xs={12} md={6}>
-                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                                Company Name<span className="text-red-500">*</span>
-                            </label>
-                            <Controller
-                                name="companyName"
-                                control={control}
-                                defaultValue=""
-                                rules={{ required: 'Company Name is required' }}
-                                render={({ field }) => (
-                                    <input
-                                        {...field}
-                                        type="text"
-                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
-                                        placeholder="Company Name"
-                                    />
-                                )}
-                            />
-                            {errors.companyName && <p className="text-red-500 mt-1">{errors.companyName?.message}</p>}
-                        </Grid>
-
-                        <Grid item xs={12} md={6}>
-                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                                gst Number<span className="text-red-500">*</span>
-                            </label>
-                            <Controller
-                                name="gstNumber"
-                                control={control}
-                                defaultValue=""
-                                rules={{ required: 'gst Number is required' }}
-                                render={({ field }) => (
-                                    <input
-                                        {...field}
-                                        type="text"
-                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
-                                        placeholder="gst Number"
-                                    />
-                                )}
-                            />
-                            {errors.gstNumber && <p className="text-red-500 mt-1">{errors.gstNumber?.message}</p>}
-                        </Grid>
-
-                        <Grid item xs={12} md={12}>
-                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                                Address<span className="text-red-500">*</span>
-                            </label>
-                            <Controller
-                                name="address"
-                                control={control}
-                                defaultValue=""
-                                rules={{ required: 'Address is required' }}
-                                render={({ field }) => (
-                                    <textarea
-                                        {...field}
-                                        type="text"
-                                        className="mt-1 min-h-[200px] block w-full rounded-md shadow-sm p-3"
-                                        placeholder="Address"
-                                    />
-                                )}
-                            />
-                            {errors.address && <p className="text-red-500 mt-1">{errors.address?.message}</p>}
-                        </Grid>
-
-                        <Grid item xs={12} md={6}>
-                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                                Role<span className="text-red-500">*</span>
-                            </label>
-                            <Controller
-                                name="role"
-                                control={control}
-                                rules={{ required: 'Role is required', validate: (value) => value !== "Select Role" || "Please select a valid role" }}
-                                render={({ field }) => (
-                                    <select
-                                        {...field}
-                                        name="role"
-                                        // value={formValues.gender}
-                                        // onChange={handleChange}
-                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
-                                        // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-                                        required
-                                        defaultValue={"Select Role"}
-                                        value={field.value || "Select Role"} // Set the selected value
-                                        onChange={(e) => field.onChange(e.target.value)} // Update the selected value
-                                    >
-                                        <option disabled value="Select Role">Select Role</option>
-                                        <option value="SuperAdmin">SuperAdmin</option>
-                                        <option value="Admin">Admin</option>
-                                    </select>
-                                )}
-                            />
-                            {errors.role && <p className="text-red-500 mt-1">{errors.role?.message}</p>}
-                        </Grid>
-
-                        <Grid item xs={12} md={6}>
-                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                                Category<span className="text-red-500">*</span>
-                            </label>
-                            <Controller
-                                name="category"
-                                control={control}
-                                rules={{ required: 'Category is required', validate: (value) => value !== "Select Category" || "Please select a valid category" }}
-                                render={({ field }) => (
-                                    <select
-                                        {...field}
-                                        name="category"
-                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
-                                        // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-                                        required
-                                        defaultValue={"Select Category"}
-                                        value={field.value || "Select Category"} // Set the selected value
-                                        onChange={(e) => field.onChange(e.target.value)} // Update the selected value
-                                    >
-                                        <option value="Select Category" disabled>Select Category</option>
-                                        <option value="MAIN USER">MAIN USER</option>
-                                        <option value="SUB USER">SUB USER</option>
-                                    </select>
-                                )}
-                            />
-                            {errors.category && <p className="text-red-500 mt-1">{errors.category?.message}</p>}
-                        </Grid>
-
                         <Grid item xs={12} md={6}>
                             <label className="block text-[17px] font-medium text-gray-700 pb-2">
                                 Password<span className="text-red-500">*</span>
@@ -294,6 +172,132 @@ const AddPersonMaster = () => {
                             />
                             {errors.mobileNumber && <p className="text-red-500 mt-1">{errors.mobileNumber?.message}</p>}
                         </Grid>
+
+                        <Grid item xs={12} md={6}>
+                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
+                                Company Name<span className="text-red-500">*</span>
+                            </label>
+                            <Controller
+                                name="companyName"
+                                control={control}
+                                defaultValue=""
+                                rules={{ required: 'Company Name is required' }}
+                                render={({ field }) => (
+                                    <input
+                                        {...field}
+                                        type="text"
+                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
+                                        placeholder="Company Name"
+                                    />
+                                )}
+                            />
+                            {errors.companyName && <p className="text-red-500 mt-1">{errors.companyName?.message}</p>}
+                        </Grid>
+
+                        <Grid item xs={12} md={6}>
+                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
+                                gst Number<span className="text-red-500">*</span>
+                            </label>
+                            <Controller
+                                name="gstNumber"
+                                control={control}
+                                defaultValue=""
+                                rules={{ required: 'gst Number is required' }}
+                                render={({ field }) => (
+                                    <input
+                                        {...field}
+                                        type="text"
+                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
+                                        placeholder="gst Number"
+                                    />
+                                )}
+                            />
+                            {errors.gstNumber && <p className="text-red-500 mt-1">{errors.gstNumber?.message}</p>}
+                        </Grid>
+
+                        <Grid item xs={12} md={6}>
+                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
+                                Role<span className="text-red-500">*</span>
+                            </label>
+                            <Controller
+                                name="role"
+                                control={control}
+                                rules={{ required: 'Role is required', validate: (value) => value !== "Select Role" || "Please select a valid role" }}
+                                render={({ field }) => (
+                                    <select
+                                        {...field}
+                                        name="role"
+                                        disabled
+                                        // value={formValues.gender}
+                                        // onChange={handleChange}
+                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
+                                        // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
+                                        required
+                                        value={field.value || "Admin"} // Set default value as "Admin"
+                                        onChange={(e) => field.onChange(e.target.value)} // Update the selected value
+                                    >
+                                        <option value="Admin">
+                                            Admin
+                                        </option>
+                                        <option value="superadmin">SuperAdmin</option>
+                                    </select>
+                                )}
+                            />
+                            {errors.role && <p className="text-red-500 mt-1">{errors.role?.message}</p>}
+                        </Grid>
+
+                        <Grid item xs={12} md={6}>
+                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
+                                Category<span className="text-red-500">*</span>
+                            </label>
+                            <Controller
+                                name="category"
+                                control={control}
+                                rules={{ required: 'Category is required', validate: (value) => value !== "Select Category" || "Please select a valid category" }}
+                                render={({ field }) => (
+                                    <select
+                                        {...field}
+                                        name="category"
+                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
+                                        // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
+                                        required
+                                        defaultValue={"Select Category"}
+                                        value={field.value || "Select Category"} // Set the selected value
+                                        onChange={(e) => field.onChange(e.target.value)} // Update the selected value
+                                    >
+                                        <option value="Select Category" disabled>Select Category</option>
+                                        <option value="MAIN USER">MAIN USER</option>
+                                        <option value="SUB USER">SUB USER</option>
+                                    </select>
+                                )}
+                            />
+                            {errors.category && <p className="text-red-500 mt-1">{errors.category?.message}</p>}
+                        </Grid>
+
+                        <Grid item xs={12} md={12}>
+                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
+                                Address<span className="text-red-500">*</span>
+                            </label>
+                            <Controller
+                                name="address"
+                                control={control}
+                                defaultValue=""
+                                rules={{ required: 'Address is required' }}
+                                render={({ field }) => (
+                                    <textarea
+                                        {...field}
+                                        type="text"
+                                        className="mt-1 min-h-[200px] block w-full rounded-md shadow-sm p-3"
+                                        placeholder="Address"
+                                    />
+                                )}
+                            />
+                            {errors.address && <p className="text-red-500 mt-1">{errors.address?.message}</p>}
+                        </Grid>
+
+
+
+
 
                         <Grid item xs={12} md={6}>
                             <label className="block text-[17px] font-medium text-gray-700 pb-2">

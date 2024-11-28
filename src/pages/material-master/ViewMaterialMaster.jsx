@@ -1,5 +1,5 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Box, Button, Card, CardContent, Grid, Typography, useMediaQuery } from '@mui/material';
+import { Autocomplete, Box, Button, Card, CardContent, CircularProgress, Grid, TextField, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from "@mui/material/styles";
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
@@ -16,11 +16,21 @@ const ViewMaterialMaster = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const UId = useParams();
   const [materialData, setMaterialData] = useState([])
+  const [rawMaterialIdName, setRawMaterialIdName] = useState("");
+  const [rawMaterialId, setRawMaterialId] = useState("");
+  const [perosnId, setPersonId] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
+  const [personName, setPersonName] = useState([]); // List of people from API
+  const [loading, setLoading] = useState(false); // Loading state for fetching
+  const [selectedPerson, setSelectedPerson] = useState(null); // Selected person info
+  const [selectedPersonFlag, setSelectedPersonFlag] = useState(false); // Selected person info
   // useForm setup with validation rules
+
   const {
     control,
     formState: { errors },
+    setValue,
   } = useForm({
     mode: 'onSubmit', // Trigger validation on form submit
   });
@@ -35,6 +45,17 @@ const ViewMaterialMaster = () => {
       const response = await axiosInstance.get(`materialMaster/detail?uuid=${UId?.id}`)
       if (response.status === 200) {
         setMaterialData(response?.data?.payload?.data)
+        const rawMaterial = response?.data?.payload?.data?.rawMaterialMasterDetail;
+        if (rawMaterial) {
+          setRawMaterialIdName(rawMaterial.name); // For display in Autocomplete
+          setSearchTerm(rawMaterial.name);       // Pre-fill the searchTerm
+          setRawMaterialId({
+            id: rawMaterial.id,
+            uuid: rawMaterial.uuid,
+            name: rawMaterial.name
+          });
+          setValue("raw_material_id", rawMaterial, { shouldValidate: true }); // Update the form value
+        }
       }
 
     } catch (error) {
@@ -68,46 +89,100 @@ const ViewMaterialMaster = () => {
         >
           <Grid container spacing={2}>
 
-            <Grid item xs={12} md={6} >
-              <label className="block text-[17px] text-nowrap font-medium text-gray-700 pb-2">
-                Person Master Name<span className="text-red-500">*</span>
-              </label>
-              <Controller
-                name="person_id"
-                control={control}
-                rules={{ required: "Person Master ID is required" }}
-                render={({ field }) => (
-                  <div className="relative">
-                    <div
-                      className="mt-1 w-full rounded-md p-3 relative flex shadow-sm justify-between cursor-pointer"
-                    >
-                      <p>{materialData?.personMasterDetailes?.name}</p>
-                      <ExpandMoreIcon />
-                    </div>
 
-                  </div>
-                )}
-              />
-            </Grid>
             <Grid item xs={12} md={6} >
               <label className="block text-[17px] text-nowrap font-medium text-gray-700 pb-2">
                 Raw Material Master Name<span className="text-red-500">*</span>
               </label>
               <Controller
-                name="raw_material_id"
+                name=''
                 control={control}
-                rules={{ required: "Raw Material ID is required" }}
                 render={({ field }) => (
-                  <div className="relative">
-                    <div
-                      className="mt-1 w-full rounded-md p-3 relative flex shadow-sm justify-between cursor-pointer"
-                    >
-                      <p>{materialData?.rawMaterialMasterDetail?.name}</p>
-                      <ExpandMoreIcon />
-                    </div>
-                  </div>
+                  <Autocomplete
+                    {...field}
+                    id="raw-autocomplete"
+                    readOnly
+                    options={personName}
+                    getOptionLabel={(option) => option.name || option.inputValue || ""}
+                    filterOptions={(options, state) => {
+                      const filtered = options.filter((option) =>
+                        option.name.toLowerCase().includes(state.inputValue.toLowerCase())
+                      );
+
+                      const { inputValue } = state;
+                      const isExisting = options.some((option) => inputValue === option.name);
+                      if (inputValue !== '' && !isExisting) {
+                        filtered.push({
+                          inputValue,
+                          name: `Add ${inputValue}`,
+                        });
+                      }
+
+                      return filtered;
+                    }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        border: "none", // Removes the default border
+                      },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none", // Ensures the border outline is hidden
+                      },
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        border: "none", // Prevents border from reappearing on focus
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        border: "none", // Prevents border from appearing on hover
+                      },
+                      "& .MuiAutocomplete-inputRoot": {
+                        padding: 0, // Removes padding for a clean look
+                      },
+                    }}
+
+                    onChange={(event, newValue) => {
+                      if (newValue && newValue.name && newValue.name.startsWith('Add ')) {
+                        // Remove the 'Add ' prefix
+                        newValue.name = newValue.name.replace('Add ', '');
+                      }
+                      // handleSelectPerson(event, newValue);
+                    }}
+                    onInputChange={(event, newInputValue) => setSearchTerm(newInputValue)}
+                    inputValue={searchTerm}
+                    isOptionEqualToValue={(option, value) => option.uuid === value.uuid}
+                    loading={loading}
+                    disableClearable
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        fullWidth
+                        placeholder="Name"
+                        InputProps={{
+                          ...params.InputProps,
+                          className: "mt-1 block w-full rounded-md shadow-sm p-3 border-none bg-white", // Tailwind CSS classes for styling
+                          style: {
+                            borderColor: "transparent", // Set border color to transparent
+                          },
+                          endAdornment: (
+                            <>
+                              {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                              {params.InputProps.endAdornment}
+                            </>
+                          ),
+                        }}
+                        InputLabelProps={{
+                          ...params.InputLabelProps,
+                          shrink: Boolean(searchTerm) || params.inputProps?.value.length > 0, // Conditionally shrink label
+                        }}
+                      />
+                    )}
+                    renderOption={(props, option) => <li {...props}>{option.name}</li>}
+                    freeSolo
+                  />
                 )}
               />
+              {selectedPersonFlag && (
+                <span className="text-red-500">{"Raw Material is required"}</span>
+              )}
             </Grid>
 
 
@@ -123,7 +198,7 @@ const ViewMaterialMaster = () => {
                   <input
                     {...field}
                     type="text"
-                    className="mt-1 block w-full rounded-md shadow-sm p-3"
+                    className="mt-1 block w-full h-[55px] rounded-md shadow-sm p-3"
                     placeholder="Total Stocks"
                     value={materialData?.total_stock}
                   />
@@ -142,7 +217,7 @@ const ViewMaterialMaster = () => {
                   <input
                     {...field}
                     type="text"
-                    className="mt-1 block w-full rounded-md shadow-sm p-3"
+                    className="mt-1 block w-full h-[55px] rounded-md shadow-sm p-3"
                     placeholder="Units"
                     value={materialData?.unit}
                   />
@@ -162,7 +237,7 @@ const ViewMaterialMaster = () => {
                   <input
                     {...field}
                     type="text"
-                    className="mt-1 block w-full rounded-md shadow-sm p-3"
+                    className="mt-1 block w-full h-[55px] rounded-md shadow-sm p-3"
                     placeholder="Price Per Unit"
                     value={materialData?.price_per_unit}
                   />
@@ -170,7 +245,7 @@ const ViewMaterialMaster = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={12}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
                 Root Level<span className="text-red-500">*</span>
               </label>
@@ -182,7 +257,7 @@ const ViewMaterialMaster = () => {
                   <input
                     {...field}
                     type="text"
-                    className="mt-1 block w-full rounded-md shadow-sm p-3"
+                    className="mt-1 block w-full h-[55px] rounded-md shadow-sm p-3"
                     placeholder="Root Level"
                     value={materialData?.root_level}
                   />

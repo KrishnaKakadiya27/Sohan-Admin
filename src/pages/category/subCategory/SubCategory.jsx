@@ -21,6 +21,18 @@ const SubCategory = () => {
   const [subCategoryData, setSubCategoryData] = useState([]);
   const [openAdd, setOpenAdd] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+
+  // Debounce the searchTerm
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500); // Adjust debounce delay as needed (e.g., 500ms)
+
+    return () => {
+      clearTimeout(handler); // Cleanup previous timeout
+    };
+  }, [searchTerm]);
 
 
   // useForm setup with validation rules
@@ -78,13 +90,13 @@ const SubCategory = () => {
   useEffect(() => {
     getCategoryData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, entries, searchTerm])
+  }, [currentPage, entries, debouncedSearchTerm])
 
   const getCategoryData = async () => {
 
     try {
       setIsLoading(true);
-      const searchValue = searchTerm ? JSON.stringify({ search: searchTerm }) : ""
+      const searchValue = debouncedSearchTerm ? JSON.stringify({ search: debouncedSearchTerm }) : '';
       const response = await axiosInstance.get(`/subCategoryMaster?page=${currentPage}&records_per_page=${entries}&search=${searchValue}`)
       if (response.status === 200) {
         setSubCategoryData(response?.data?.payload?.data)

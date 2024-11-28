@@ -110,6 +110,34 @@ const ViewPersonMaster = () => {
               {errors.email && <p className="text-red-500 mt-1">{errors.email?.message}</p>}
             </Grid>
 
+            <Grid item xs={12} md={6}>
+              <label className="block text-[17px] font-medium text-gray-700 pb-2">
+                Mobile Number<span className="text-red-500">*</span>
+              </label>
+              <Controller
+                name="mobileNumber"
+                control={control}
+                defaultValue=""
+                rules={{
+                  required: 'Mobile number is required',
+                  pattern: {
+                    value: /^[6-9]\d{9}$/,
+                    message: 'Invalid mobile number',
+                  },
+                }}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    type="tel"
+                    className="mt-1 block w-full rounded-md shadow-sm p-3"
+                    placeholder="Mobile Number"
+                    value={personData?.mobile_number}
+                  />
+                )}
+              />
+              {errors.mobileNumber && <p className="text-red-500 mt-1">{errors.mobileNumber?.message}</p>}
+            </Grid>
+
 
             <Grid item xs={12} md={6}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
@@ -155,55 +183,6 @@ const ViewPersonMaster = () => {
               {errors.gstNumber && <p className="text-red-500 mt-1">{errors.gstNumber?.message}</p>}
             </Grid>
 
-            <Grid item xs={12} md={12}>
-              <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                Address<span className="text-red-500">*</span>
-              </label>
-              <Controller
-                name="address"
-                control={control}
-                defaultValue=""
-                rules={{ required: 'Address is required' }}
-                render={({ field }) => (
-                  <textarea
-                    {...field}
-                    type="text"
-                    className="mt-1 min-h-[200px] block w-full rounded-md shadow-sm p-3"
-                    placeholder="Address"
-                    value={personData?.address}
-                  />
-                )}
-              />
-              {errors.address && <p className="text-red-500 mt-1">{errors.address?.message}</p>}
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                Role<span className="text-red-500">*</span>
-              </label>
-              <Controller
-                name="role"
-                control={control}
-                rules={{ required: 'Role is required', validate: (value) => value !== "Select Role" || "Please select a valid role" }}
-                render={({ field }) => (
-                  <select
-                    {...field}
-                    name="role"
-                    className="mt-1 block w-full rounded-md shadow-sm p-3"
-                    required
-                    defaultValue={"Select Role"}
-                    value={personData?.role}
-                    disabled
-                  >
-                    <option disabled value="Select Role">Select Role</option>
-                    <option value="SuperAdmin">SuperAdmin</option>
-                    <option value="Admin">Admin</option>
-                  </select>
-                )}
-              />
-              {errors.role && <p className="text-red-500 mt-1">{errors.role?.message}</p>}
-            </Grid>
-
             <Grid item xs={12} md={6}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
                 Category<span className="text-red-500">*</span>
@@ -231,33 +210,33 @@ const ViewPersonMaster = () => {
               {errors.category && <p className="text-red-500 mt-1">{errors.category?.message}</p>}
             </Grid>
 
-            <Grid item xs={12} md={6}>
+
+            <Grid item xs={12} md={12}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                Mobile Number<span className="text-red-500">*</span>
+                Address<span className="text-red-500">*</span>
               </label>
               <Controller
-                name="mobileNumber"
+                name="address"
                 control={control}
                 defaultValue=""
-                rules={{
-                  required: 'Mobile number is required',
-                  pattern: {
-                    value: /^[6-9]\d{9}$/,
-                    message: 'Invalid mobile number',
-                  },
-                }}
+                rules={{ required: 'Address is required' }}
                 render={({ field }) => (
-                  <input
+                  <textarea
                     {...field}
-                    type="tel"
-                    className="mt-1 block w-full rounded-md shadow-sm p-3"
-                    placeholder="Mobile Number"
-                    value={personData?.mobile_number}
+                    type="text"
+                    className="mt-1 min-h-[200px] block w-full rounded-md shadow-sm p-3"
+                    placeholder="Address"
+                    value={personData?.address}
                   />
                 )}
               />
-              {errors.mobileNumber && <p className="text-red-500 mt-1">{errors.mobileNumber?.message}</p>}
+              {errors.address && <p className="text-red-500 mt-1">{errors.address?.message}</p>}
             </Grid>
+
+
+
+
+
 
             <Grid item xs={12} md={6}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">

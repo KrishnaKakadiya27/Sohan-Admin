@@ -20,6 +20,19 @@ const MaterialMaster = () => {
   const [materialData, setMaterialData] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+
+
+  // Debounce the searchTerm
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500); // Adjust debounce delay as needed (e.g., 500ms)
+
+    return () => {
+      clearTimeout(handler); // Cleanup previous timeout
+    };
+  }, [searchTerm]);
 
 
   const handleEntriesChange = (event) => {
@@ -39,13 +52,13 @@ const MaterialMaster = () => {
   useEffect(() => {
     getListData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, entries, searchTerm])
+  }, [currentPage, entries, debouncedSearchTerm])
 
   const getListData = async () => {
 
     try {
       setIsLoading(true)
-      const searchValue = searchTerm ? JSON.stringify({ search: searchTerm }) : ""
+      const searchValue = debouncedSearchTerm ? JSON.stringify({ search: debouncedSearchTerm }) : '';
       const response = await axiosInstance.get(`/materialMaster?page=${currentPage}&records_per_page=${entries}&search=${searchValue}`)
       if (response.status === 200) {
         setMaterialData(response?.data?.payload?.data)

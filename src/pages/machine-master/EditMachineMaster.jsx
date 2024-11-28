@@ -1,15 +1,10 @@
-import { Box, Button, Grid, useMediaQuery } from '@mui/material';
-import React, { useEffect, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Autocomplete, Box, Button, CircularProgress, Grid, TextField, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from "@mui/material/styles";
-import axiosInstance from '../../axiosInstance';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import React, { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
-import SelectSubCategoryDialog from './SelectSubCategoryDialog';
-import SelectCategoryDialog from '../category/subCategory/SelectCategoryDialog';
-import SelectPersonMasterDialog from '../raw-material-master/SelectPersonMasterDialog';
+import { useNavigate, useParams } from 'react-router-dom';
+import axiosInstance from '../../axiosInstance';
 import CustomSwitch from '../../components/common/CustomSwitch';
 
 
@@ -20,7 +15,6 @@ const EditMachineMaster = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [machineData, setMachineData] = useState([]);
 
-  const [personIdName, setPersonIdName] = useState("");
   const [perosnId, setPersonId] = useState("");
   const [dialogOpenPerson, setDialogOpenPerson] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,25 +24,152 @@ const EditMachineMaster = () => {
   const [subCatIdName, setSubCatIdName] = useState("");
   const [subCatId, setSubCatId] = useState("");
   const [dialogOpenSub, setDialogOpenSub] = useState(false);
-  const [categoryId, setCategoryId] = useState(catId?.id);
   const [selectCatFlag, setSelectCatFlag] = useState(false)
-  const handleOpenDialogPerson = () => {
-    setDialogOpenPerson(!dialogOpenPerson);
-    setSearchTerm("");
-  }
-  const handleOpenDialog = () => {
-    setDialogOpen(!dialogOpen);
-  }
-  const handleOpenDialogSub = () => {
-    setDialogOpenSub(!dialogOpenSub);
-  }
+
+  const [searchTermSub, setSearchTermSub] = useState("");
+
+  const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
+
+  const [recordsPerPage] = useState(10);
+  const [hasMore, setHasMore] = useState(true);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(''); // Debounced search term
+  const [debouncedSearchTermSubCat, setDebouncedSearchTermSubCat] = useState(''); // Debounced search term
+  const [loading, setLoading] = useState(false); // Loading state for fetching
+  const [selectedPerson, setSelectedPerson] = useState(null); // Selected person info
+  const [selectedSubCat, setSelectedSubCat] = useState(null); // Selected person info
+
+
+  // Debounce searchTerm to optimize API calls
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
+
+  // Fetch person data from the API
+  const fetchPersonData = async (currentPage) => {
+    setLoading(true);
+    try {
+      const searchValue = debouncedSearchTerm ? JSON.stringify({ search: debouncedSearchTerm }) : '';
+      const response = await axiosInstance.get(
+        `/categoryMaster?page=${currentPage}&records_per_page=${recordsPerPage}&search=${searchValue}`
+      );
+      const newPersonData = response.data.payload.data;
+      setCategories((prev) => (currentPage === 1 ? newPersonData : [...prev, ...newPersonData]));
+      setHasMore(newPersonData.length > 0);
+    } catch (error) {
+      console.error('Error fetching person data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTermSubCat(searchTermSub);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchTermSub]);
+
+  // Fetch person data from the API
+  const fetchSubCatData = async (currentPage) => {
+    setLoading(true);
+    try {
+      const searchValue = debouncedSearchTermSubCat ? JSON.stringify({ search: debouncedSearchTermSubCat }) : '';
+      const response = await axiosInstance.get(
+        `/subCategoryMaster?page=${currentPage}&records_per_page=${recordsPerPage}&search=${searchValue}`
+      );
+      const newPersonData = response.data.payload.data;
+      setSubCategories((prev) => (currentPage === 1 ? newPersonData : [...prev, ...newPersonData]));
+      setHasMore(newPersonData.length > 0);
+    } catch (error) {
+      console.error('Error fetching person data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initial data load and search handling
+  useEffect(() => {
+    fetchPersonData(1);
+  }, [debouncedSearchTerm]);
+
+
+  useEffect(() => {
+    fetchSubCatData(1)
+  }, [debouncedSearchTermSubCat]);
+
+  // This effect will reset the personId when searchTerm changes.
+  useEffect(() => {
+    if (!searchTerm) {
+      setPersonId("");  // Reset personId when searchTerm is empty
+    }
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (!searchTermSub) {
+      setCatId("");  // Reset personId when searchTerm is empty
+    }
+  }, [searchTermSub]);
+
+  const handleSelectPerson = (event, newValue) => {
+    if (newValue) {
+      if (newValue.inputValue) {
+        // New value added via freeSolo
+        setSelectedPerson({ name: newValue.inputValue, isNew: true });
+        setValue('categoryName', newValue.inputValue, { shouldValidate: true });
+      } else {
+        // Option selected from the list
+        setSelectedPerson({
+          id: newValue.category_master_id,
+          uuid: newValue.uuid,
+          name: newValue.name
+        });
+        setValue('categoryName', newValue.name, { shouldValidate: true });
+      }
+      trigger("categoryName"); // Trigger validation after selecting a value
+    } else {
+      // Reset if no value is selected
+      setSelectedPerson(null);
+      setValue('categoryName', '', { shouldValidate: true });
+    }
+  };
+
+  const handleSubCat = (event, newValue) => {
+    if (newValue) {
+      if (newValue.inputValue) {
+        // New value added via freeSolo
+        setSelectedSubCat({ name: newValue.inputValue, isNew: true });
+        setValue('subCategoryName', newValue.inputValue, { shouldValidate: true });
+      } else {
+        // Option selected from the list
+        setSelectedSubCat({
+          id: newValue.category_master_id,
+          uuid: newValue.uuid,
+          name: newValue.name
+        });
+        setValue('subCategoryName', newValue.name, { shouldValidate: true });
+      }
+      trigger("subCategoryName"); // Trigger validation after selecting a value
+    } else {
+      // Reset if no value is selected
+      setSelectedSubCat(null);
+      setValue('subCategoryName', '', { shouldValidate: true });
+    }
+  };
+
+
 
   // useForm setup with validation rules
   const {
     control,
     handleSubmit,
     setValue,
+    clearErrors,
     setError,
+    trigger,
     formState: { errors },
   } = useForm({
     mode: 'onSubmit', // Trigger validation on form submit
@@ -57,13 +178,11 @@ const EditMachineMaster = () => {
 
   // Form submission handler
   const onSubmit = async (data) => {
-    console.log("data", data, subCatId, perosnId,selectCatFlag)
     try {
       if (!selectCatFlag || subCatId?.id) {
         const response = await axiosInstance.put(`machineMaster?uuid=${UId?.id}`, {
-          person_master_id: data?.person_id?.uuid,
-          category_master_id: data?.cat_id?.uuid,
-          sub_category_master_id: data?.sub_cat_id?.uuid,
+          category_master_name: selectedPerson?.name,
+          sub_category_master_name: selectedSubCat?.name,
           dry_production_per_hours: data?.dry_production_per_hours,
           machine_number: data?.machine_number,
           require_space_for_machine: data?.require_space_for_machine,
@@ -104,8 +223,33 @@ const EditMachineMaster = () => {
       const response = await axiosInstance.get(`machineMaster/detail?uuid=${UId?.id}`)
       if (response.status === 200) {
         setMachineData(response?.data?.payload?.data)
-      }
+        // Set category and subcategory fields
+        // Extract category and subcategory details from the API response
+        const category = response?.data?.payload?.data?.categoryMasterDetail;
+        const subCategory = response?.data?.payload?.data?.subCategoryMasterDetail;
+        if (category) {
+          setCatIdName(category.name); // For Autocomplete display
+          setSearchTerm(category.name); // Pre-fill searchTerm
+          setSelectedPerson({
+            id: category.id,
+            uuid: category.uuid,
+            name: category.name,
+          });
+          setValue("categoryName", category, { shouldValidate: true }); // Update form value
+        }
 
+        if (subCategory) {
+          setSubCatIdName(subCategory.name); // For Autocomplete display
+          setSearchTermSub(subCategory.name); // Pre-fill searchTermSub
+          setSelectedSubCat({
+            id: subCategory.id,
+            uuid: subCategory.uuid,
+            name: subCategory.name,
+          });
+          setValue("subCategoryName", subCategory, { shouldValidate: true }); // Update form value
+        }
+      }
+      trigger(["categoryName", "subCategoryName"]); // Pass an array of field names
     } catch (error) {
       console.log("error", error);
     }
@@ -117,39 +261,7 @@ const EditMachineMaster = () => {
       setValue("dry_production_per_hours", machineData?.dry_production_per_hours);
       setValue("machine_number", machineData?.machine_number);
       setValue("activeStatus", machineData?.is_active);
-      if (machineData?.personMasterDetailes?.name) {
-        setValue("person_id", machineData?.personMasterDetailes?.name);
-        setPersonIdName(machineData?.personMasterDetailes?.name);
-        setPersonId({
-          id: machineData?.personMasterDetailes,
-          uuid: machineData?.personMasterDetailes?.uuid,
-          name: machineData?.personMasterDetailes?.name
-        });
-      } else {
-        setPersonIdName("Select Person Master Name");  // Default value when no category name is found
-      }
-      if (machineData?.categoryMasterDetail?.name) {
-        setValue("cat_id", machineData?.categoryMasterDetail?.name);
-        setCatIdName(machineData?.categoryMasterDetail?.name);
-        setCatId({
-          id: machineData?.categoryMasterDetail,
-          uuid: machineData?.categoryMasterDetail?.uuid,
-          name: machineData?.categoryMasterDetail?.name
-        });
-      } else {
-        setCatIdName("Select Category");  // Default value when no category name is found
-      }
-      if (machineData?.subCategoryMasterDetail?.name) {
-        setValue("sub_cat_id", machineData?.subCategoryMasterDetail?.name);
-        setSubCatIdName(machineData?.subCategoryMasterDetail?.name);
-        setSubCatId({
-          id: machineData?.subCategoryMasterDetail?.id,
-          uuid: machineData?.subCategoryMasterDetail?.uuid,
-          name: machineData?.subCategoryMasterDetail?.name
-        });
-      } else {
-        setSubCatIdName("Select Sub Category");  // Default value when no category name is found
-      }
+
     }
   }, [machineData, setValue]);
   return (
@@ -180,123 +292,220 @@ const EditMachineMaster = () => {
         >
           <Grid container spacing={2}>
 
+
             <Grid item xs={12} md={6} >
-              <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                Person Master Name<span className="text-red-500">*</span>
-              </label>
-              <Controller
-                name="person_id"
-                control={control}
-                rules={{ required: "Person Master ID is required" }}
-                render={({ field }) => (
-                  <div className="relative">
-                    <div
-                      className="mt-1 w-full rounded-md p-3 relative flex shadow-sm justify-between cursor-pointer"
-                      // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-                      onClick={handleOpenDialogPerson}
-                    >
-                      <p>{personIdName ? personIdName : "Select Person Master"}</p>
-                      {dialogOpenPerson ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                    </div>
-                    <SelectPersonMasterDialog
-                      open={dialogOpenPerson}
-                      setOpen={setDialogOpenPerson}
-                      personIdName={personIdName}
-                      searchTerm={searchTerm}
-                      setSearchTerm={setSearchTerm}
-                      setPersonId={(id) => {
-                        // setValue("cat_id", id,id);
-                        setPersonIdName(id?.name)
-                        setValue("person_id", id, { shouldValidate: true });
-                        setPersonId({ id: id?.id, uuid: id?.uuid, name: id?.name });
-                      }}
-                    />
-                  </div>
-                )}
-              />
-              {errors.person_id && (
-                <span className="text-red-500">{errors.person_id.message}</span>
-              )}
-            </Grid>
-            <Grid item xs={12} md={6}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
                 Category Name<span className="text-red-500">*</span>
               </label>
               <Controller
-                name="cat_id"
+                name='categoryName'
                 control={control}
-                rules={{ required: "Category ID is required" }}
+                rules={{
+                  required: "Category Name is required", // Validation rule
+                }}
                 render={({ field }) => (
-                  <div className="relative">
-                    <div
-                      className="mt-1 w-full rounded-md p-3 shadow-sm relative flex justify-between cursor-pointer"
-                      // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-                      onClick={handleOpenDialog}
-                    >
-                      <p>{catIdName ? catIdName : "Select Category"}</p>
-                      {dialogOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                    </div>
-                    <SelectCategoryDialog
-                      open={dialogOpen}
-                      setOpen={setDialogOpen}
-                      setSelectCatFlag={setSelectCatFlag}
-                      setCatId={(id) => {
-                        // setValue("cat_id", id,id);
-                        setCatIdName(id?.name)
-                        setValue("cat_id", id, { shouldValidate: true });
-                        setCatId({ id: id?.id, uuid: id?.uuid, name: id?.name });
+                  <>
+                    <Autocomplete
+                      {...field}
+                      id="raw-autocomplete"
+                      options={categories}
+                      getOptionLabel={(option) => option.name || option.inputValue || ""}
+                      filterOptions={(options, state) => {
+                        const filtered = options.filter((option) =>
+                          option.name.toLowerCase().includes(state.inputValue.toLowerCase())
+                        );
+
+                        const { inputValue } = state;
+                        const isExisting = options.some((option) => inputValue === option.name);
+                        if (inputValue !== '' && !isExisting) {
+                          filtered.push({
+                            inputValue,
+                            name: `Add ${inputValue}`,
+                          });
+                        }
+
+                        return filtered;
                       }}
+
+
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          border: "none", // Removes the default border
+                        },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          border: "none", // Ensures the border outline is hidden
+                        },
+                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                          border: "none", // Prevents border from reappearing on focus
+                        },
+                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                          border: "none", // Prevents border from appearing on hover
+                        },
+                        "& .MuiAutocomplete-inputRoot": {
+                          padding: 0, // Removes padding for a clean look
+                        },
+                      }}
+
+                      onChange={(event, newValue) => {
+                        if (newValue && newValue.name && newValue.name.startsWith('Add ')) {
+                          // Remove the 'Add ' prefix
+                          newValue.name = newValue.name.replace('Add ', '');
+                        }
+                        handleSelectPerson(event, newValue);
+                      }}
+                      onInputChange={(event, newInputValue) => {
+                        setValue('categoryName', newInputValue); // Update value while typing
+                        trigger("categoryName"); // Trigger validation while typing
+                        setSearchTerm(newInputValue)
+                      }}
+                      inputValue={searchTerm}
+                      isOptionEqualToValue={(option, value) => option.uuid === value.uuid}
+                      loading={loading}
+                      disableClearable
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          variant="outlined"
+                          fullWidth
+                          placeholder="Category Name"
+                          error={!!errors.categoryName} // Show error if validation fails
+                          InputProps={{
+                            ...params.InputProps,
+                            className: "mt-1 block w-full rounded-md shadow-sm p-3 border-none bg-white", // Tailwind CSS classes for styling
+                            style: {
+                              borderColor: "transparent", // Set border color to transparent
+                            },
+                            endAdornment: (
+                              <>
+                                {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                {params.InputProps.endAdornment}
+                              </>
+                            ),
+                          }}
+                          InputLabelProps={{
+                            ...params.InputLabelProps,
+                            shrink: Boolean(searchTerm) || params.inputProps?.value.length > 0, // Conditionally shrink label
+                          }}
+                        />
+                      )}
+                      renderOption={(props, option) => <li {...props}>{option.name}</li>}
+                      freeSolo
                     />
-                  </div>
+                    {errors.categoryName && (
+                      <Typography sx={{ marginTop: 0.4, color: "#ef4444" }}>
+                        {errors.categoryName.message}
+                      </Typography>
+                    )}
+                  </>
                 )}
               />
-              {errors.cat_id && (
-                <span className="text-red-500">{errors.cat_id.message}</span>
-              )}
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} >
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
                 Sub Category Name<span className="text-red-500">*</span>
               </label>
               <Controller
-                name="sub_cat_id"
+                name='subCategoryName'
                 control={control}
-                rules={{ required: "Sub Category is required" }}
+                rules={{
+                  required: "Sub Category Name is required", // Validation rule
+                }}
                 render={({ field }) => (
-                  <div className="relative">
-                    <div
-                      className="mt-1 w-full rounded-md p-3 shadow-sm relative flex justify-between cursor-pointer"
-                      // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-                      onClick={handleOpenDialogSub}
-                    >
-                      {/* <p>{ subCatIdName ? subCatIdName :  "Select Category"}</p> */}
-                      <p>{subCatIdName ? selectCatFlag ? "Select Category" : subCatIdName : "Select Category"}</p>
-                      {dialogOpenSub ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                    </div>
-                    <SelectSubCategoryDialog
-                      open={dialogOpenSub}
-                      setOpen={setDialogOpenSub}
-                      subCatIdName={subCatIdName}
-                      catIdName={catIdName}
-                      categoryId={categoryId}
-                      catId={catId}
-                      setSelectCatFlag={setSelectCatFlag}
-                      UUID={machineData?.category_master_id}
-                      setSubCatId={(id) => {
-                        // setValue("cat_id", id,id);
-                        setSubCatIdName(id?.name)
-                        setCategoryId(catIdName?.id)
-                        setValue("sub_cat_id", id, { shouldValidate: true });
-                        setSubCatId({ id: id?.id, uuid: id?.uuid, name: id?.name });
+                  <>
+                    <Autocomplete
+                      {...field}
+                      id="raw-autocomplete"
+                      options={subCategories}
+                      getOptionLabel={(option) => option.name || option.inputValue || ""}
+                      filterOptions={(options, state) => {
+                        const filtered = options.filter((option) =>
+                          option.name.toLowerCase().includes(state.inputValue.toLowerCase())
+                        );
+
+                        const { inputValue } = state;
+                        const isExisting = options.some((option) => inputValue === option.name);
+                        if (inputValue !== '' && !isExisting) {
+                          filtered.push({
+                            inputValue,
+                            name: `Add ${inputValue}`,
+                          });
+                        }
+
+                        return filtered;
                       }}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          border: "none", // Removes the default border
+                        },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          border: "none", // Ensures the border outline is hidden
+                        },
+                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                          border: "none", // Prevents border from reappearing on focus
+                        },
+                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                          border: "none", // Prevents border from appearing on hover
+                        },
+                        "& .MuiAutocomplete-inputRoot": {
+                          padding: 0, // Removes padding for a clean look
+                        },
+                      }}
+
+                      onChange={(event, newValue) => {
+                        if (newValue && newValue.name && newValue.name.startsWith('Add ')) {
+                          // Remove the 'Add ' prefix
+                          newValue.name = newValue.name.replace('Add ', '');
+                        }
+                        handleSubCat(event, newValue);
+                      }}
+                      onInputChange={(event, newInputValue) => {
+                        setValue('subCategoryName', newInputValue); // Update value while typing
+                        trigger("subCategoryName"); // Trigger validation while typing
+                        setSearchTermSub(newInputValue)
+                      }}
+                      inputValue={searchTermSub}
+                      isOptionEqualToValue={(option, value) => option.uuid === value.uuid}
+                      loading={loading}
+                      disableClearable
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          variant="outlined"
+                          fullWidth
+                          placeholder="Sub Category Name"
+                          error={!!errors.subCategoryName} // Show error if validation fails
+                          InputProps={{
+                            ...params.InputProps,
+                            className: "mt-1 block w-full rounded-md shadow-sm p-3 border-none bg-white", // Tailwind CSS classes for styling
+                            style: {
+                              borderColor: "transparent", // Set border color to transparent
+                            },
+                            endAdornment: (
+                              <>
+                                {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                {params.InputProps.endAdornment}
+                              </>
+                            ),
+                          }}
+                          InputLabelProps={{
+                            ...params.InputLabelProps,
+                            shrink: Boolean(searchTermSub) || params.inputProps?.value.length > 0, // Conditionally shrink label
+                          }}
+                        />
+                      )}
+                      renderOption={(props, option) => <li {...props}>{option.name}</li>}
+                      freeSolo
                     />
-                  </div>
+
+                    {errors.subCategoryName && (
+                      <Typography sx={{ marginTop: 0.4, color: "#ef4444" }}>
+                        {errors.subCategoryName.message}
+                      </Typography>
+                    )}
+                  </>
                 )}
               />
-              {errors.sub_cat_id && (
-                <span className="text-red-500">{errors.sub_cat_id.message}</span>
-              )}
             </Grid>
 
             <Grid item xs={12} md={6}>
@@ -317,7 +526,7 @@ const EditMachineMaster = () => {
                   <input
                     {...field}
                     type="text"
-                    className="mt-1 block w-full rounded-md shadow-sm p-3"
+                    className="mt-1 block w-full h-[55px] rounded-md shadow-sm p-3"
                     placeholder="Machine Number"
                   />
                 )}
@@ -343,7 +552,7 @@ const EditMachineMaster = () => {
                   <input
                     {...field}
                     type="text"
-                    className="mt-1 block w-full rounded-md shadow-sm p-3"
+                    className="mt-1 block w-full h-[55px] rounded-md shadow-sm p-3"
                     placeholder="Dry Production"
                   />
                 )}
@@ -365,7 +574,7 @@ const EditMachineMaster = () => {
                   <input
                     {...field}
                     type="text"
-                    className="mt-1 block w-full rounded-md shadow-sm p-3"
+                    className="mt-1 block w-full h-[55px] rounded-md shadow-sm p-3"
                     placeholder="Require Space for Machine"
                   />
                 )}
@@ -391,7 +600,7 @@ const EditMachineMaster = () => {
                   <input
                     {...field}
                     type="text"
-                    className="mt-1 block w-full rounded-md shadow-sm p-3"
+                    className="mt-1 block w-full h-[55px] rounded-md shadow-sm p-3"
                     placeholder="Rent Per Sq.feet"
                   />
                 )}

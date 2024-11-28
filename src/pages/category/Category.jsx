@@ -21,6 +21,19 @@ const Category = () => {
   const [mainCategoryData, setMainCategoryData] = useState([]);
   const [openAdd, setOpenAdd] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+
+
+  // Debounce the searchTerm
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500); // Adjust debounce delay as needed (e.g., 500ms)
+
+    return () => {
+      clearTimeout(handler); // Cleanup previous timeout
+    };
+  }, [searchTerm]);
 
   // useForm setup with validation rules
   const {
@@ -76,7 +89,7 @@ const Category = () => {
   useEffect(() => {
     getCategoryData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, entries, searchTerm])
+  }, [currentPage, entries, debouncedSearchTerm])
 
   const getCategoryData = async () => {
 

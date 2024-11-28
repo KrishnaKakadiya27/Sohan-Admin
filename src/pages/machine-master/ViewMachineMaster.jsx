@@ -1,5 +1,5 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Box, Button, Card, CardContent, Grid, Typography, useMediaQuery } from '@mui/material';
+import { Autocomplete, Box, Button, Card, CardContent, CircularProgress, Grid, TextField, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from "@mui/material/styles";
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
@@ -15,10 +15,21 @@ const ViewMachineMaster = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
     const UId = useParams();
     const [machineData, setMachineData] = useState([])
+    const [searchTerm, setSearchTerm] = useState("");
+    const [catIdName, setCatIdName] = useState("");
+    const [subCatIdName, setSubCatIdName] = useState("");
+    const [searchTermSub, setSearchTermSub] = useState("");
+    const [categories, setCategories] = useState([]);
+    const [subCategories, setSubCategories] = useState([]);
+    const [loading, setLoading] = useState(false); // Loading state for fetching
+    const [selectedPerson, setSelectedPerson] = useState(null); // Selected person info
+    const [selectedSubCat, setSelectedSubCat] = useState(null); // Selected person info
+
 
     // useForm setup with validation rules
     const {
-        control
+        control,
+        setValue
     } = useForm({
         mode: 'onSubmit', // Trigger validation on form submit
     });
@@ -33,6 +44,29 @@ const ViewMachineMaster = () => {
             const response = await axiosInstance.get(`machineMaster/detail?uuid=${UId?.id}`)
             if (response.status === 200) {
                 setMachineData(response?.data?.payload?.data)
+                const category = response?.data?.payload?.data?.categoryMasterDetail;
+                const subCategory = response?.data?.payload?.data?.subCategoryMasterDetail;
+                if (category) {
+                    setCatIdName(category.name); // For Autocomplete display
+                    setSearchTerm(category.name); // Pre-fill searchTerm
+                    setSelectedPerson({
+                        id: category.id,
+                        uuid: category.uuid,
+                        name: category.name,
+                    });
+                    setValue("cat_id", category, { shouldValidate: true }); // Update form value
+                }
+
+                if (subCategory) {
+                    setSubCatIdName(subCategory.name); // For Autocomplete display
+                    setSearchTermSub(subCategory.name); // Pre-fill searchTermSub
+                    setSelectedSubCat({
+                        id: subCategory.id,
+                        uuid: subCategory.uuid,
+                        name: subCategory.name,
+                    });
+                    setValue("sub_cat_id", subCategory, { shouldValidate: true }); // Update form value
+                }
             }
 
         } catch (error) {
@@ -65,68 +99,186 @@ const ViewMachineMaster = () => {
                     }}
                 >
                     <Grid container spacing={2}>
-
                         <Grid item xs={12} md={6} >
                             <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                                Person Master Name<span className="text-red-500">*</span>
+                                Categories<span className="text-red-500">*</span>
                             </label>
                             <Controller
-                                name="person_id"
+                                name='cat_id'
                                 control={control}
-                                rules={{ required: "Person Master ID is required" }}
                                 render={({ field }) => (
-                                    <div className="relative">
-                                        <div
-                                            className="mt-1 w-full rounded-md p-3 relative flex shadow-sm justify-between cursor-pointer"
-                                        >
-                                            <p>{machineData?.personMasterDetailes?.name}</p>
-                                            <ExpandMoreIcon />
-                                        </div>
+                                    <Autocomplete
+                                        {...field}
+                                        readOnly
+                                        id="raw-autocomplete"
+                                        options={categories}
+                                        getOptionLabel={(option) => option.name || option.inputValue || ""}
+                                        filterOptions={(options, state) => {
+                                            const filtered = options.filter((option) =>
+                                                option.name.toLowerCase().includes(state.inputValue.toLowerCase())
+                                            );
 
-                                    </div>
+                                            const { inputValue } = state;
+                                            const isExisting = options.some((option) => inputValue === option.name);
+                                            if (inputValue !== '' && !isExisting) {
+                                                filtered.push({
+                                                    inputValue,
+                                                    name: `Add ${inputValue}`,
+                                                });
+                                            }
+
+                                            return filtered;
+                                        }}
+                                        sx={{
+                                            "& .MuiOutlinedInput-root": {
+                                                border: "none", // Removes the default border
+                                            },
+                                            "& .MuiOutlinedInput-notchedOutline": {
+                                                border: "none", // Ensures the border outline is hidden
+                                            },
+                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                border: "none", // Prevents border from reappearing on focus
+                                            },
+                                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                border: "none", // Prevents border from appearing on hover
+                                            },
+                                            "& .MuiAutocomplete-inputRoot": {
+                                                padding: 0, // Removes padding for a clean look
+                                            },
+                                        }}
+
+                                        onChange={(event, newValue) => {
+                                            if (newValue && newValue.name && newValue.name.startsWith('Add ')) {
+                                                // Remove the 'Add ' prefix
+                                                newValue.name = newValue.name.replace('Add ', '');
+                                            }
+                                            // handleSelectPerson(event, newValue);
+                                        }}
+                                        onInputChange={(event, newInputValue) => setSearchTerm(newInputValue)}
+                                        inputValue={searchTerm}
+                                        isOptionEqualToValue={(option, value) => option.uuid === value.uuid}
+                                        loading={loading}
+                                        disableClearable
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                variant="outlined"
+                                                fullWidth
+                                                placeholder="Name"
+                                                InputProps={{
+                                                    ...params.InputProps,
+                                                    className: "mt-1 block w-full rounded-md shadow-sm p-3 border-none bg-white", // Tailwind CSS classes for styling
+                                                    style: {
+                                                        borderColor: "transparent", // Set border color to transparent
+                                                    },
+                                                    endAdornment: (
+                                                        <>
+                                                            {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                                            {params.InputProps.endAdornment}
+                                                        </>
+                                                    ),
+                                                }}
+                                                InputLabelProps={{
+                                                    ...params.InputLabelProps,
+                                                    shrink: Boolean(searchTerm) || params.inputProps?.value.length > 0, // Conditionally shrink label
+                                                }}
+                                            />
+                                        )}
+                                        renderOption={(props, option) => <li {...props}>{option.name}</li>}
+                                        freeSolo
+                                    />
                                 )}
                             />
-
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                                Category Name<span className="text-red-500">*</span>
-                            </label>
-                            <Controller
-                                name="cat_id"
-                                control={control}
-                                rules={{ required: "Category ID is required" }}
-                                render={({ field }) => (
-                                    <div className="relative">
-                                        <div
-                                            className="mt-1 w-full rounded-md p-3 shadow-sm relative flex justify-between cursor-pointer"
-                                        >
-                                            <p>{machineData?.categoryMasterDetail?.name}</p>
-                                             <ExpandMoreIcon />
-                                        </div>
-                                    </div>
-                                )}
-                            />
-
                         </Grid>
 
-                        <Grid item xs={12} md={6}>
+                        <Grid item xs={12} md={6} >
                             <label className="block text-[17px] font-medium text-gray-700 pb-2">
                                 Sub Category Name<span className="text-red-500">*</span>
                             </label>
                             <Controller
-                                name="sub_cat_id"
+                                name='sub_cat_id'
                                 control={control}
-                                rules={{ required: "Sub Category is required" }}
                                 render={({ field }) => (
-                                    <div className="relative">
-                                        <div
-                                            className="mt-1 w-full rounded-md p-3 shadow-sm relative flex justify-between cursor-pointer"
-                                        >
-                                            <p>{machineData?.subCategoryMasterDetail?.name}</p>
-                                            <ExpandMoreIcon />
-                                        </div>
-                                    </div>
+                                    <Autocomplete
+                                        {...field}
+                                        readOnly
+                                        id="raw-autocomplete"
+                                        options={subCategories}
+                                        getOptionLabel={(option) => option.name || option.inputValue || ""}
+                                        filterOptions={(options, state) => {
+                                            const filtered = options.filter((option) =>
+                                                option.name.toLowerCase().includes(state.inputValue.toLowerCase())
+                                            );
+
+                                            const { inputValue } = state;
+                                            const isExisting = options.some((option) => inputValue === option.name);
+                                            if (inputValue !== '' && !isExisting) {
+                                                filtered.push({
+                                                    inputValue,
+                                                    name: `Add ${inputValue}`,
+                                                });
+                                            }
+
+                                            return filtered;
+                                        }}
+                                        sx={{
+                                            "& .MuiOutlinedInput-root": {
+                                                border: "none", // Removes the default border
+                                            },
+                                            "& .MuiOutlinedInput-notchedOutline": {
+                                                border: "none", // Ensures the border outline is hidden
+                                            },
+                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                border: "none", // Prevents border from reappearing on focus
+                                            },
+                                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                border: "none", // Prevents border from appearing on hover
+                                            },
+                                            "& .MuiAutocomplete-inputRoot": {
+                                                padding: 0, // Removes padding for a clean look
+                                            },
+                                        }}
+
+                                        onChange={(event, newValue) => {
+                                            if (newValue && newValue.name && newValue.name.startsWith('Add ')) {
+                                                // Remove the 'Add ' prefix
+                                                newValue.name = newValue.name.replace('Add ', '');
+                                            }
+                                            // handleSubCat(event, newValue);
+                                        }}
+                                        onInputChange={(event, newInputValue) => setSearchTermSub(newInputValue)}
+                                        inputValue={searchTermSub}
+                                        isOptionEqualToValue={(option, value) => option.uuid === value.uuid}
+                                        loading={loading}
+                                        disableClearable
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                variant="outlined"
+                                                fullWidth
+                                                placeholder="Name"
+                                                InputProps={{
+                                                    ...params.InputProps,
+                                                    className: "mt-1 block w-full rounded-md shadow-sm p-3 border-none bg-white", // Tailwind CSS classes for styling
+                                                    style: {
+                                                        borderColor: "transparent", // Set border color to transparent
+                                                    },
+                                                    endAdornment: (
+                                                        <>
+                                                            {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                                            {params.InputProps.endAdornment}
+                                                        </>
+                                                    ),
+                                                }}
+                                                InputLabelProps={{
+                                                    ...params.InputLabelProps,
+                                                    shrink: Boolean(searchTermSub) || params.inputProps?.value.length > 0, // Conditionally shrink label
+                                                }}
+                                            />
+                                        )}
+                                        renderOption={(props, option) => <li {...props}>{option.name}</li>}
+                                        freeSolo
+                                    />
                                 )}
                             />
                         </Grid>
@@ -150,7 +302,7 @@ const ViewMachineMaster = () => {
                                         {...field}
                                         value={machineData?.machine_number}
                                         type="text"
-                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
+                                        className="mt-1 block w-full h-[53px] rounded-md shadow-sm p-3"
                                         placeholder="Machine Number"
                                     />
                                 )}
@@ -175,7 +327,7 @@ const ViewMachineMaster = () => {
                                     <input
                                         {...field}
                                         type="text"
-                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
+                                        className="mt-1 block w-full h-[53px] rounded-md shadow-sm p-3"
                                         placeholder="Dry Production"
                                         value={machineData?.dry_production_per_hours}
                                     />
@@ -197,7 +349,7 @@ const ViewMachineMaster = () => {
                                     <input
                                         {...field}
                                         type="text"
-                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
+                                        className="mt-1 block w-full h-[53px] rounded-md shadow-sm p-3"
                                         placeholder="Require Space for Machine"
                                         value={machineData?.require_space_for_machine}
                                     />
@@ -217,7 +369,7 @@ const ViewMachineMaster = () => {
                                     <input
                                         {...field}
                                         type="text"
-                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
+                                        className="mt-1 block w-full h-[53px] rounded-md shadow-sm p-3"
                                         placeholder="Rent Per Sq.feet"
                                         value={machineData?.rent_per_sq_feet}
                                     />
@@ -238,7 +390,7 @@ const ViewMachineMaster = () => {
                                     <input
                                         {...field}
                                         type="text"
-                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
+                                        className="mt-1 block w-full h-[53px] rounded-md shadow-sm p-3"
                                         placeholder="Rent Per Hr"
                                         value={machineData?.rent_per_hour}
                                     />
@@ -257,7 +409,7 @@ const ViewMachineMaster = () => {
                                     <input
                                         {...field}
                                         type="text"
-                                        className="mt-1 block w-full rounded-md shadow-sm p-3"
+                                        className="mt-1 block w-full h-[53px] rounded-md shadow-sm p-3"
                                         placeholder="Rent Per 8 hrs"
                                         value={machineData?.rent_per_8_hours}
                                     />
