@@ -56,19 +56,21 @@ const EditSubCategory = ({ id, getCategoryData }) => {
 
     // Fetch person data from the API
     const fetchPersonData = async (currentPage) => {
-        setLoading(true);
-        try {
-            const searchValue = debouncedSearchTerm ? JSON.stringify({ search: debouncedSearchTerm }) : '';
-            const response = await axiosInstance.get(
-                `/categoryMaster?page=${currentPage}&records_per_page=${recordsPerPage}&search=${searchValue}`
-            );
-            const newPersonData = response.data.payload.data;
-            setCategories((prev) => (currentPage === 1 ? newPersonData : [...prev, ...newPersonData]));
-            setHasMore(newPersonData.length > 0);
-        } catch (error) {
-            console.error('Error fetching person data:', error);
-        } finally {
-            setLoading(false);
+        if (open) {
+            setLoading(true);
+            try {
+                const searchValue = debouncedSearchTerm ? JSON.stringify({ search: debouncedSearchTerm }) : '';
+                const response = await axiosInstance.get(
+                    `/categoryMaster?page=${currentPage}&records_per_page=${recordsPerPage}&search=${searchValue}`
+                );
+                const newPersonData = response.data.payload.data;
+                setCategories((prev) => (currentPage === 1 ? newPersonData : [...prev, ...newPersonData]));
+                setHasMore(newPersonData.length > 0);
+            } catch (error) {
+                console.error('Error fetching person data:', error);
+            } finally {
+                setLoading(false);
+            }
         }
     };
 

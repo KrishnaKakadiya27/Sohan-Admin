@@ -148,7 +148,7 @@ const MachineMaster = () => {
                     {item?.machine_master_id}
                   </td>
                   <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                    {item?.personMasterDetailes?.name}
+                    {item?.personMasterDetail?.name}
                   </td>
                   <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
                     {item?.categoryMasterDetail?.name}

@@ -170,18 +170,18 @@ export default function SidebarList() {
       {
         role === "superAdmin" &&
         <ListItemButton
-        sx={{
-          py: "12px",
-          "&:hover": { color: "#E17A21" },
-          color: isActivePersonMaster() ? "#E17A21" : getTextColor("/person-master"),
-        }}
-        onClick={() => handleNavigation("/person-master")} // Navigate on click
-      >
-        <ListItemIcon sx={{ minWidth: "42px" }}>
-          <PersonOutlineOutlinedIcon style={{ color: "#E17A21", fontSize: "30px", marginLeft: "-4px" }} />
-        </ListItemIcon>
-        <ListItemText primary="Person Master" />
-      </ListItemButton>
+          sx={{
+            py: "12px",
+            "&:hover": { color: "#E17A21" },
+            color: isActivePersonMaster() ? "#E17A21" : getTextColor("/person-master"),
+          }}
+          onClick={() => handleNavigation("/person-master")} // Navigate on click
+        >
+          <ListItemIcon sx={{ minWidth: "42px" }}>
+            <PersonOutlineOutlinedIcon style={{ color: "#E17A21", fontSize: "30px", marginLeft: "-4px" }} />
+          </ListItemIcon>
+          <ListItemText primary="Person Master" />
+        </ListItemButton>
       }
 
 
@@ -235,7 +235,7 @@ export default function SidebarList() {
 
 
       {/* Item Master */}
-      {role === "superAdmin" && <ListItemButton
+      <ListItemButton
         sx={{
           py: "12px",
           "&:hover": { color: "#E17A21" },
@@ -247,7 +247,7 @@ export default function SidebarList() {
           <ItemMaster style={{ color: "#E17A21", fontSize: "30px", marginLeft: "-3px" }} />
         </ListItemIcon>
         <ListItemText primary="Item Master" />
-      </ListItemButton>}
+      </ListItemButton>
 
 
       {/* Machine Master */}
