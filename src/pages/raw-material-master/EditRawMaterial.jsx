@@ -146,44 +146,6 @@ const EditRawMaterial = () => {
                             {errors.name && <p className="text-red-500 mt-1">{errors.name?.message}</p>}
                         </Grid>
 
-                        <Grid item xs={12} md={6} >
-                            <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                                Person Master Name<span className="text-red-500">*</span>
-                            </label>
-                            <Controller
-                                name="person_id"
-                                control={control}
-                                rules={{ required: "Person Master ID is required" }}
-                                render={({ field }) => (
-                                    <div className="relative">
-                                        <div
-                                            className="mt-1 w-full rounded-md p-3 relative flex shadow-sm justify-between cursor-pointer"
-                                            // style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-                                            onClick={handleOpenDialog}
-                                        >
-                                            <p>{catIdName ? catIdName : "Select Person Master"}</p>
-                                            {dialogOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                                        </div>
-                                        <SelectPersonMasterDialog
-                                            open={dialogOpen}
-                                            setOpen={setDialogOpen}
-                                            catIdName={catIdName}
-                                            setCatId={(id) => {
-                                                // setValue("cat_id", id,id);
-                                                setCatIdName(id?.name)
-                                                setValue("person_id", id, { shouldValidate: true });
-                                                setCatId({ id: id?.id, uuid: id?.uuid, name: id?.name });
-                                            }}
-                                        />
-                                    </div>
-                                )}
-                            />
-                            {errors.person_id && (
-                                <span className="text-red-500">{errors.person_id.message}</span>
-                            )}
-                        </Grid>
-
-
                         <Grid item xs={12} md={6}>
                             <label className="block text-[17px] font-medium text-gray-700 pb-2">
                                 Price Per Unit<span className="text-red-500">*</span>
